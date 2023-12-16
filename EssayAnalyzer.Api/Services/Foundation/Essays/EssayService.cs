@@ -8,19 +8,19 @@ public partial class EssayService: IEssayService
     private readonly ILoggingBroker loggingBroker;
     private readonly IStorageBroker sotageBroker;
     
-    public async ValueTask<Essay> AddEssayAsync(Essay essay)
+    public ValueTask<Essay> AddEssayAsync(Essay essay)
     {
         throw new NotImplementedException();
     }
 
     public ValueTask<IQueryable<Essay>> RetrieveEssaysAsync()
     {
-        throw new NotImplementedException();
+         throw new NotImplementedException();
     }
 
     public ValueTask<Essay> RetrieveEssayByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+         throw new NotImplementedException();
     }
 
     public ValueTask<Essay> RemoveEssayByIdAsync(Guid id)

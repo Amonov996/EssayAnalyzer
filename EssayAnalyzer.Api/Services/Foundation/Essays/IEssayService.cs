@@ -7,5 +7,5 @@ public partial interface IEssayService
   public ValueTask<Essay> AddEssayAsync(Essay essay);
   public ValueTask<IQueryable<Essay>> RetrieveEssaysAsync();
   public ValueTask<Essay> RetrieveEssayByIdAsync(Guid id);
-  public ValueTask<Essay> RemoveEssayByIdAsync(Guid id);
+  public ValueTask<Essay> RemoveEssayByIdAsync(Guid id );
 }

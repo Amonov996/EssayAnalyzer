@@ -1,6 +1,6 @@
 namespace EssayAnalyzer.Api.Services.Foundation.Essays;
 
-public class Class
+public partial class EssayService
 {
     
 }
