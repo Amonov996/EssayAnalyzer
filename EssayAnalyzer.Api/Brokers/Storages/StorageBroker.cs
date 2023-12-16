@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace EssayAnalyzer.Api.Brokers.Storages;
-public partial class StorageBroker : EFxceptionsContext, IStorageBroker
+public sealed partial class StorageBroker : EFxceptionsContext, IStorageBroker
 {
     private readonly IConfiguration configuration;
 
@@ -10,13 +10,17 @@ public partial class StorageBroker : EFxceptionsContext, IStorageBroker
     {
         this.configuration = configuration;
         this.Database.Migrate();
+    }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        optionsBuilder.UseNpgsql(connectionString);
     }
 
     public async ValueTask<T> InsertAsync<T>(T @object)
     {
         var broker = new StorageBroker(this.configuration);
-
         broker.Entry(@object).State = EntityState.Added;
         await broker.SaveChangesAsync();
 
@@ -53,13 +57,5 @@ public partial class StorageBroker : EFxceptionsContext, IStorageBroker
         await broker.SaveChangesAsync();
 
         return @object;
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        string connectionString =
-            configuration.GetConnectionString("DefaultConnection");
-
-        optionsBuilder.UseNpgsql(connectionString);
     }
 }
