@@ -1,4 +1,5 @@
 using EssayAnalyzer.Api.Brokers.Loggings;
+using EssayAnalyzer.Api.Brokers.Storages;
 using EssayAnalyzer.Api.Models.Foundation.Essays;
 
 namespace EssayAnalyzer.Api.Services.Foundation.Essays;
@@ -28,5 +29,3 @@ public partial class EssayService: IEssayService
         throw new NotImplementedException();
     }
 }
-
-interface IStorageBroker { }
