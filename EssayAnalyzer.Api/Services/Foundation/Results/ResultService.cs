@@ -1,3 +1,4 @@
+using EssayAnalyzer.Api.Brokers.Loggings;
 using EssayAnalyzer.Api.Brokers.Storages;
 using EssayAnalyzer.Api.Models.Foundation.Results;
 
@@ -6,10 +7,12 @@ namespace EssayAnalyzer.Api.Services.Foundation.Results;
 public partial class ResultService: IResultService
 {
     private readonly IStorageBroker storageBroker;
+    public readonly ILoggingBroker loggingBroker;
 
-    public ResultService(IStorageBroker storageBroker)
+    public ResultService(IStorageBroker storageBroker, ILoggingBroker loggingBroker)
     {
         this.storageBroker = storageBroker;
+        this.loggingBroker = loggingBroker;
     }
 
     public ValueTask<Result> AddResultAsync(Result result)
