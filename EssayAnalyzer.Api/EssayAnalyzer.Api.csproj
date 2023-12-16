@@ -6,4 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Standard.AI.OpenAI" Version="0.6.0" />
+    </ItemGroup>
+
 </Project>
