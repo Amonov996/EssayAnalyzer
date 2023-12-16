@@ -7,7 +7,6 @@ public class Result
 {
     public Guid Id { get; set; }
     public Guid EssayId { get; set; }
-    public int Mark { get; set; }
     public string Feedback { get; set; }
 
     [JsonIgnore]
