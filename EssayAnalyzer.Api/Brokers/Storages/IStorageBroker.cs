@@ -1,6 +1,5 @@
-﻿namespace EssayAnalyzer.Api.Brokers.Storages
-{
-    public partial interface IStorageBroker
-    {
-    }
-}
+﻿namespace EssayAnalyzer.Api.Brokers.Storages;
+  
+public partial interface IStorageBroker
+  {
+  }
