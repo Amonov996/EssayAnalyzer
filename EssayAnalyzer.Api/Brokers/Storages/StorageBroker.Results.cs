@@ -9,5 +9,11 @@ namespace EssayAnalyzer.Api.Brokers.Storages
 
         public async ValueTask<Result> InsertResultAsync(Result result) =>
             await InsertAsync(result);
+
+        public async ValueTask<Result> SelectResultByIdAsync(Guid id) =>
+            await SelectAsync<Result>(id);
+
+        public IQueryable<Result> SelectAllResults() =>
+            SelectAll<Result>();
     }
 }
