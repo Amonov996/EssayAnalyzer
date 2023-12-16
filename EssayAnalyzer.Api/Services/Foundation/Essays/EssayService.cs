@@ -7,8 +7,14 @@ namespace EssayAnalyzer.Api.Services.Foundation.Essays;
 public partial class EssayService: IEssayService
 {
     private readonly ILoggingBroker loggingBroker;
-    private readonly IStorageBroker sotageBroker;
-    
+    private readonly IStorageBroker storageBroker;
+
+    public EssayService(ILoggingBroker loggingBroker, IStorageBroker storageBroker)
+    {
+        this.loggingBroker = loggingBroker;
+        this.storageBroker = storageBroker;
+    }
+
     public ValueTask<Essay> AddEssayAsync(Essay essay)
     {
         throw new NotImplementedException();
