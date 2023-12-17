@@ -1,4 +1,5 @@
 ﻿using EFxceptions;
+using EssayAnalyzer.Api.Models.Foundation.Essays;
 using Microsoft.EntityFrameworkCore;
 
 namespace EssayAnalyzer.Api.Brokers.Storages;
@@ -16,6 +17,12 @@ public sealed partial class StorageBroker : EFxceptionsContext, IStorageBroker
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         optionsBuilder.UseNpgsql(connectionString);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        AddEssayConfiguration(modelBuilder);
+        AddResultConfiguration(modelBuilder);
     }
 
     public async ValueTask<T> InsertAsync<T>(T @object)

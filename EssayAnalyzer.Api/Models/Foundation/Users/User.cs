@@ -11,5 +11,5 @@ public class User
     public string EmailAddress {get; set; }
     
     [JsonIgnore]
-    public virtual ICollection<Essay>? Essay { get; set; }
+    public virtual ICollection<Essay>? Essays { get; set; }
 }
