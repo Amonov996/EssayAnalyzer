@@ -2,7 +2,7 @@ using EssayAnalyzer.Api.Brokers.Loggings;
 using EssayAnalyzer.Api.Brokers.Storages;
 using EssayAnalyzer.Api.Models.Foundation.Users;
 
-namespace EssayAnalyzer.Api.Services.Users;
+namespace EssayAnalyzer.Api.Services.Foundation.Users;
 
 public class UserService : IUserService
 {
@@ -16,27 +16,27 @@ public class UserService : IUserService
         this.loggingBroker = loggingBroker;
     }
     
-    public async ValueTask<User> InsertUserAsync(User user)
+    public async ValueTask<User> AddUserAsync(User user)
+    {
+        return await this.storageBroker.InsertUserAsync(user);
+    }
+
+    public IQueryable<User> RetrieveAllUsers()
     {
         throw new NotImplementedException();
     }
 
-    public async ValueTask<User> SelectUserByIdAsync(Guid id)
+    public async ValueTask<User> RetrieveUserByIdAsync(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    public IQueryable<User> SelectAllUsers()
+    public async ValueTask<User> ModifyUserAsync(User user)
     {
         throw new NotImplementedException();
     }
 
-    public async ValueTask<User> UpdateUserAsync(User user)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async ValueTask<User> RemoveUserById(Guid id)
+    public async ValueTask<User> RemoveUserByIdAsync(Guid id)
     {
         throw new NotImplementedException();
     }
