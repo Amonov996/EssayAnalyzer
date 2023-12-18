@@ -482,3 +482,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+/EssayAnalyzer.Api/appsettings.Development.json
+/EssayAnalyzer.Api/appsettings.Development.json
+/EssayAnalyzer.Api/appsettings.Development.json
+/EssayAnalyzer.Api/appsettings.Development.json
