@@ -1,8 +1,10 @@
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using EssayAnalyzer.Api.Brokers.Loggings;
 using EssayAnalyzer.Api.Brokers.Storages;
 using EssayAnalyzer.Api.Models.Foundation.Users;
 using EssayAnalyzer.Api.Services.Foundation.Users;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -31,4 +33,8 @@ public partial class UserServiceTests
 
     private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
         actualException => actualException.SameExceptionAs(expectedException);
+    
+    private static SqlException GetSqlException() =>
+        (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
 }
