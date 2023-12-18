@@ -34,4 +34,54 @@ public partial class EssayServiceTest
         this.loggingBrokerMock.VerifyNoOtherCalls();
         this.storageBrokerMock.VerifyNoOtherCalls();
     }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task ShouldThrowValidationExceptionOnAddIfInputIsInvalidAndLogItAsync(string invalidText)
+    {
+        //given
+        var invalidEssay = new Essay()
+        {
+                    Title = invalidText,
+                    Content = invalidText
+        };
+
+        var expectedInvalidEssayException = new InvalidEssayException();
+        
+        expectedInvalidEssayException.AddData(
+            key:nameof(Essay.Id),
+            values: "Id is required");
+        
+        expectedInvalidEssayException.AddData(
+            key:nameof(Essay.Title),
+            values: "Text is required");
+        
+        expectedInvalidEssayException.AddData(
+            key:nameof(Essay.Content),
+            values: "Text is required");
+
+        var expectedEssayValidationException =
+                    new EssayValidationException(expectedInvalidEssayException);
+        
+        //when
+        ValueTask<Essay> addEssayTask = this.essayService.AddEssayAsync(invalidEssay);
+
+        EssayValidationException actualEssayValidationException =
+                    await Assert.ThrowsAsync<EssayValidationException>(addEssayTask.AsTask);
+        
+        //then
+        actualEssayValidationException.Should().BeEquivalentTo(expectedEssayValidationException);
+        
+        this.loggingBrokerMock.Verify(broker =>
+                    broker.LogError(It.Is(SameExceptionAs(expectedEssayValidationException))),
+            Times.Once);
+
+        this.storageBrokerMock.Verify(broker =>
+                    broker.InsertEssayAsync(invalidEssay), Times.Never);
+        
+        this.loggingBrokerMock.VerifyNoOtherCalls();
+        this.storageBrokerMock.VerifyNoOtherCalls();
+    }
 }
