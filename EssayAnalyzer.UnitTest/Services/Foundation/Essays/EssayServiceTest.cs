@@ -12,7 +12,7 @@ using Xeptions;
 
 namespace EssayAnalyzer.UnitTest.Services.Foundation.Essays;
 
-public class EssayServiceTest
+public partial class EssayServiceTest
 {
     private readonly Mock<IStorageBroker> storageBrokerMock;
     private readonly Mock<ILoggingBroker> loggingBrokerMock;
