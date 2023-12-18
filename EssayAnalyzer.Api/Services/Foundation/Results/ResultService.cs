@@ -15,10 +15,13 @@ public partial class ResultService: IResultService
         this.loggingBroker = loggingBroker;
     }
 
-    public ValueTask<Result> AddResultAsync(Result result)
-    {
-        throw new NotImplementedException();
-    }
+    public ValueTask<Result> AddResultAsync(Result result) =>
+        TryCatch(async () =>
+        {
+            ValidateResultOnAdd(result);
+
+            return await this.storageBroker.InsertResultAsync(result);
+        });
 
     public ValueTask<ICollection<Result>> RetrieveAllResults()
     {
