@@ -16,17 +16,17 @@ public class UserService : IUserService
         this.loggingBroker = loggingBroker;
     }
     
-    public async ValueTask<User> InsertUserAsync(User user)
+    public async ValueTask<User> AddUserAsync(User user)
+    {
+        return await this.storageBroker.InsertUserAsync(user);
+    }
+
+    public IQueryable<User> RetrieveAllUsers()
     {
         throw new NotImplementedException();
     }
 
-    public IQueryable<User> SelectAllUsers()
-    {
-        throw new NotImplementedException();
-    }
-
-    public async ValueTask<User> SelectUserByIdAsync(Guid id)
+    public async ValueTask<User> RetrieveUserByIdAsync(Guid id)
     {
         throw new NotImplementedException();
     }
