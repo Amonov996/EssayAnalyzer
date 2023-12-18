@@ -33,8 +33,61 @@ public partial class UserServiceTests
                 SameExceptionAs(expectedUserValidationException))),
             Times.Once);
         
+        this.loggingBrokerMock.VerifyNoOtherCalls();
+        this.storageBrokerMock.VerifyNoOtherCalls();
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("  ")]
+    public async Task ShouldThrowValidationExceptionOnAddIfUserIsInvalidAndLogItAsync(
+        string invalidText)
+    {
+        // given
+        User invalidUser = new User()
+        {
+            FirstName = invalidText,
+            LastName = invalidText,
+            EmailAddress = invalidText
+        };
+
+        var invalidUserException = new InvalidUserException();
+        
+        invalidUserException.AddData(
+            key: nameof(User.Id),
+            values: "Id is required");
+        
+        invalidUserException.AddData(
+            key: nameof(User.FirstName),
+            values: "Text is required");
+        
+        invalidUserException.AddData(
+            key: nameof(User.LastName),
+            values: "Text is required");
+        
+        invalidUserException.AddData(
+            key: nameof(User.EmailAddress),
+            values: "Text is required");
+        
+        var expectedUserValidationException = 
+            new UserValidationException(invalidUserException);
+        
+        // when
+        ValueTask<User> addUserTask = this.userService.AddUserAsync(invalidUser);
+
+        UserValidationException actualUserValidationException =
+            await Assert.ThrowsAsync<UserValidationException>(addUserTask.AsTask);
+
+        // then
+        actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
+        
+        this.loggingBrokerMock.Verify(broker => 
+            broker.LogError(It.Is(SameExceptionAs(expectedUserValidationException))),
+            Times.Once);
+        
         this.storageBrokerMock.Verify(broker => 
-            broker.InsertUserAsync(nullUser),Times.Never);
+            broker.InsertUserAsync(invalidUser),Times.Never);
         
         this.loggingBrokerMock.VerifyNoOtherCalls();
         this.storageBrokerMock.VerifyNoOtherCalls();
