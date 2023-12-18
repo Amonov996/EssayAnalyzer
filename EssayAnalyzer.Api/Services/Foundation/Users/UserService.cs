@@ -18,7 +18,7 @@ public class UserService : IUserService
     
     public async ValueTask<User> AddUserAsync(User user)
     {
-        throw new NotImplementedException();
+        return await this.storageBroker.InsertUserAsync(user);
     }
 
     public IQueryable<User> RetrieveAllUsers()
