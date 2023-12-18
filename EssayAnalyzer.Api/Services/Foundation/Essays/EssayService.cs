@@ -15,8 +15,13 @@ public partial class EssayService: IEssayService
         this.storageBroker = storageBroker;
     }
 
-    public ValueTask<Essay> AddEssayAsync(Essay essay) => 
-                this.storageBroker.InsertEssayAsync(essay);
+    public ValueTask<Essay> AddEssayAsync(Essay essay) =>
+                TryCatch(async () =>
+                {
+                    ValidateEssay(essay);
+                    return await this.storageBroker.InsertEssayAsync(essay);
+                });
+               
 
 
     public IQueryable<Essay> RetrieveAllEssays()=> 

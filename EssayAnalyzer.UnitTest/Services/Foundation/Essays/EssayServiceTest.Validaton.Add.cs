@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using EssayAnalyzer.Api.Models.Foundation.Essays;
 using EssayAnalyzer.Api.Models.Foundation.Essays.Exceptions;
 using FluentAssertions;
