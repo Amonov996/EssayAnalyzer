@@ -55,6 +55,10 @@ public partial class EssayServiceTest
             values: "Id is required");
         
         expectedInvalidEssayException.AddData(
+            key:nameof(Essay.UserId),
+            values: "Id is required");
+        
+        expectedInvalidEssayException.AddData(
             key:nameof(Essay.Title),
             values: "Text is required");
         

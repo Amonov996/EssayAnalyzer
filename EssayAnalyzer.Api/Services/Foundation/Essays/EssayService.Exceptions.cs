@@ -18,6 +18,10 @@ public partial class EssayService
           {
                throw CreateAdnLogValidationException(nullException);
           }
+          catch (InvalidEssayException invalidEssayException)
+          {
+               throw CreateAdnLogValidationException(invalidEssayException);
+          }
           catch (Exception exception)
           {
                var failedEssayException = new FailedEssayServiceException(exception);
