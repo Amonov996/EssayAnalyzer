@@ -10,6 +10,7 @@ namespace EssayAnalyzer.Api.Services.Foundation.Essays;
 public partial class EssayService
 {
      private delegate ValueTask<Essay> ReturningEssayFunctions();
+     private delegate IQueryable<Essay> ReturningEssaysFunctions();
 
      private async ValueTask<Essay> TryCatch(ReturningEssayFunctions returningEssayFunctions)
      {
@@ -41,6 +42,26 @@ public partial class EssayService
           {
                var failedEssayException = new FailedEssayServiceException(exception);
                throw CreateAndLogServiceException(failedEssayException);
+          }
+     }
+
+     private IQueryable<Essay> TryCatch(ReturningEssaysFunctions returningEssaysFunctions)
+     {
+          try
+          {
+               return returningEssaysFunctions();
+          }
+          catch (SqlException sqlException)
+          {
+               var failedEssayStorageException = new FailedEssayStorageException(sqlException);
+
+               throw CreateAndLogCriticalDependencyException(failedEssayStorageException);
+          }
+          catch (Exception exception)
+          {
+               var failedEssayServiceException = new FailedEssayServiceException(exception);
+
+               throw CreateAndLogServiceException(failedEssayServiceException);
           }
      }
 
