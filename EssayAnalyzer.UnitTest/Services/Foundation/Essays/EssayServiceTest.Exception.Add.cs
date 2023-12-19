@@ -29,8 +29,7 @@ public partial class EssayServiceTest
             await Assert.ThrowsAnyAsync<EssayDependencyException>(addEssayTask.AsTask);
         
         //then
-        actualEssayDependencyException.Should().BeEquivalentTo(
-            expectedEssayStorageException);
+        actualEssayDependencyException.Should().BeEquivalentTo(expectedEssayStorageException);
 
         this.storageBrokerMock.Verify(broker =>
             broker.InsertEssayAsync(randomEssay), 

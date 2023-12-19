@@ -1,5 +1,6 @@
 using EssayAnalyzer.Api.Models.Foundation.Essays;
 using EssayAnalyzer.Api.Models.Foundation.Essays.Exceptions;
+using Microsoft.Data.SqlClient;
 using Xeptions;
 
 namespace EssayAnalyzer.Api.Services.Foundation.Essays;
@@ -22,11 +23,25 @@ public partial class EssayService
           {
                throw CreateAdnLogValidationException(invalidEssayException);
           }
+          catch (SqlException sqlException)
+          {
+               var essayStorageException = new FailedEssayStorageException(sqlException);
+
+               throw CreateAndLogCriticalDependencyException(essayStorageException);
+          }
           catch (Exception exception)
           {
                var failedEssayException = new FailedEssayServiceException(exception);
                throw CreateAndLogServiceException(failedEssayException);
           }
+     }
+
+     private EssayDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+     {
+          var essayDependencyException = new EssayDependencyException(exception);
+          this.loggingBroker.LogCritical(essayDependencyException);
+          
+          return essayDependencyException;
      }
 
      private EssayValidationException CreateAdnLogValidationException(Xeption exception)
