@@ -28,20 +28,23 @@ public partial class EssayServiceTest
             loggingBroker: this.loggingBrokerMock.Object);
     }
 
+    private IQueryable<Essay> CreateRandomEssays() =>
+        CreateEssayFiller().Create(count: GetRandomNumber()).AsQueryable();
+    
     private static Essay CreateRandomEssay() => 
-                CreateEssayFiller().Create();
+        CreateEssayFiller().Create();
 
     private static string GetRandomString() => 
-                new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+        new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
     private static int GetRandomNumber() => 
-                new IntRange(min: 9, max: 99).GetValue();
+        new IntRange(min: 9, max: 99).GetValue();
 
     private static SqlException CreateSqlException() => 
-                (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+        (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
     private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) => 
-                actualException => actualException.SameExceptionAs(expectedException);
+        actualException => actualException.SameExceptionAs(expectedException);
     
     
     private static Filler<Essay> CreateEssayFiller()
@@ -51,4 +54,6 @@ public partial class EssayServiceTest
 
         return filler;
     }
+
+
 }

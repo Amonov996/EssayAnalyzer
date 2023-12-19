@@ -21,11 +21,10 @@ public partial class EssayService: IEssayService
                     ValidateEssay(essay);
                     return await this.storageBroker.InsertEssayAsync(essay);
                 });
-               
 
 
-    public IQueryable<Essay> RetrieveAllEssays()=> 
-                this.storageBroker.SelectAllEssays();
+
+    public IQueryable<Essay> RetrieveAllEssays() => throw new NotImplementedException();
 
     public ValueTask<Essay> RetrieveEssayByIdAsync(Guid id) => 
                 this.storageBroker.SelectEssayByIdAsync(id);
