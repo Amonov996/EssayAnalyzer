@@ -37,4 +37,10 @@ public partial class UserServiceTests
     private static SqlException GetSqlException() =>
         (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
+    private static int GetRandomNumber() =>
+        new IntRange(min: 0, max: 99).GetValue();
+
+    private static string GetRandomMessage() =>
+        new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
 }

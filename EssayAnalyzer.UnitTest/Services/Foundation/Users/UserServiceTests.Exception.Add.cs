@@ -1,5 +1,7 @@
+using EFxceptions.Models.Exceptions;
 using EssayAnalyzer.Api.Models.Foundation.Users;
 using EssayAnalyzer.Api.Models.Foundation.Users.Exceptions;
+using EssayAnalyzer.Api.Services.Foundation.Users.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -43,5 +45,46 @@ public partial class UserServiceTests
         
         this.storageBrokerMock.VerifyNoOtherCalls();
         this.loggingBrokerMock.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public async Task ShouldThrowDependencyValidationExceptionOnAddIfUserAlreadyExistsAndLogItAsync()
+    {
+        // given 
+        User randomUser = CreateRandomUser();
+        User alreadyExistsUser = randomUser;
+        string randomMessage = GetRandomMessage();
+        
+        var duplicateKeyException = 
+            new DuplicateKeyException(randomMessage);
+
+        var alreadyExistsUserException = 
+            new AlreadyExistsUserException(duplicateKeyException);
+
+        var expectedUserDependencyValidationException =
+            new UserDependencyValidationException(alreadyExistsUserException);
+
+        this.storageBrokerMock.Setup(broker =>
+            broker.InsertUserAsync(alreadyExistsUser)).ThrowsAsync(duplicateKeyException);
+
+        // when
+        ValueTask<User> addUserTask = this.userService.AddUserAsync(alreadyExistsUser);
+
+        UserDependencyValidationException actualUserDependencyValidationException =
+            await Assert.ThrowsAsync<UserDependencyValidationException>(addUserTask.AsTask);
+
+        // then
+        actualUserDependencyValidationException.Should()
+            .BeEquivalentTo(expectedUserDependencyValidationException);
+        
+        this.loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedUserDependencyValidationException))),
+            Times.Once);
+        
+        this.storageBrokerMock.Verify(broker => 
+            broker.InsertUserAsync(It.IsAny<User>()),Times.Never);
+        
+        this.loggingBrokerMock.VerifyNoOtherCalls();
+        this.storageBrokerMock.VerifyNoOtherCalls();
     }
 }
