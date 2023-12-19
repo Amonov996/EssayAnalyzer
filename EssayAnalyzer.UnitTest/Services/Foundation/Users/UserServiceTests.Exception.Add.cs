@@ -82,7 +82,7 @@ public partial class UserServiceTests
             Times.Once);
         
         this.storageBrokerMock.Verify(broker => 
-            broker.InsertUserAsync(It.IsAny<User>()),Times.Never);
+            broker.InsertUserAsync(It.IsAny<User>()),Times.Once);
         
         this.loggingBrokerMock.VerifyNoOtherCalls();
         this.storageBrokerMock.VerifyNoOtherCalls();

@@ -1,5 +1,7 @@
+using EFxceptions.Models.Exceptions;
 using EssayAnalyzer.Api.Models.Foundation.Users;
 using EssayAnalyzer.Api.Models.Foundation.Users.Exceptions;
+using EssayAnalyzer.Api.Services.Foundation.Users.Exceptions;
 using Microsoft.Data.SqlClient;
 using Xeptions;
 
@@ -25,11 +27,27 @@ public partial class UserService
         }
         catch (SqlException sqlException)
         {
-            var failedUserStorageException = 
+            var failedUserStorageException =
                 new FailedUserStorageException(sqlException);
 
             throw CreateAndLogCriticalDependencyException(failedUserStorageException);
         }
+        catch (DuplicateKeyException duplicateKeyException)
+        {
+            var alreadyExistsUserException =
+                new AlreadyExistsUserException(duplicateKeyException);
+
+            throw CreateAndLogDependencyValidationException(alreadyExistsUserException);
+        }
+    }
+
+    private UserDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+    {
+        var userDependencyValidationException =
+            new UserDependencyValidationException(exception);
+
+        this.loggingBroker.LogError(userDependencyValidationException);
+        return userDependencyValidationException;
     }
 
     private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
