@@ -39,6 +39,13 @@ public partial class UserService
 
             throw CreateAndLogDependencyValidationException(alreadyExistsUserException);
         }
+        catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+        {
+            var invalidUserRefenerenceException =
+                new InvalidUserRefenerenceException(foreignKeyConstraintConflictException);
+
+            throw CreateAndLogDependencyValidationException(invalidUserRefenerenceException);
+        }
     }
 
     private UserDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
