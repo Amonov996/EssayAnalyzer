@@ -42,10 +42,10 @@ public partial class UserService
         }
         catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
         {
-            var invalidUserRefenerenceException =
+            var invalidUserReferenceException =
                 new InvalidUserRefenerenceException(foreignKeyConstraintConflictException);
 
-            throw CreateAndLogDependencyValidationException(invalidUserRefenerenceException);
+            throw CreateAndLogDependencyValidationException(invalidUserReferenceException);
         }
         catch (DbUpdateException dbUpdateException)
         {
