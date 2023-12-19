@@ -12,6 +12,8 @@ public partial class UserService
 {
     private delegate ValueTask<User> ReturnUserFunction();
 
+    private delegate IQueryable<User> ReturnUsersFunction();
+
     private async ValueTask<User> TryCatch(ReturnUserFunction returnUserFunction)
     {
         try
@@ -42,10 +44,10 @@ public partial class UserService
         }
         catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
         {
-            var invalidUserRefenerenceException =
+            var invalidUserReferenceException =
                 new InvalidUserRefenerenceException(foreignKeyConstraintConflictException);
 
-            throw CreateAndLogDependencyValidationException(invalidUserRefenerenceException);
+            throw CreateAndLogDependencyValidationException(invalidUserReferenceException);
         }
         catch (DbUpdateException dbUpdateException)
         {
@@ -70,6 +72,21 @@ public partial class UserService
 
         this.loggingBroker.LogError(userServiceException);
         return userServiceException;
+    }
+
+    private IQueryable<User> TryCatch(ReturnUsersFunction returnUsersFunction)
+    {
+        try
+        {
+            return returnUsersFunction();
+        }
+        catch (SqlException sqlException)
+        {
+            var failedUserStorageException = 
+                new FailedUserStorageException(sqlException);
+
+            throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+        }
     }
 
     private UserDependencyException CreateAndLogDependencyException(Xeption exception)
