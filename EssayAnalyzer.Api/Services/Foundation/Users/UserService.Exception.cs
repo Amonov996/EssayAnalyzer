@@ -12,6 +12,8 @@ public partial class UserService
 {
     private delegate ValueTask<User> ReturnUserFunction();
 
+    private delegate IQueryable<User> ReturnUsersFunction();
+
     private async ValueTask<User> TryCatch(ReturnUserFunction returnUserFunction)
     {
         try
@@ -53,6 +55,21 @@ public partial class UserService
                 new FailedUserStorageException(dbUpdateException);
 
             throw CreateAndLogDependencyException(failedUserStorageException);
+        }
+    }
+
+    private IQueryable<User> TryCatch(ReturnUsersFunction returnUsersFunction)
+    {
+        try
+        {
+            return returnUsersFunction();
+        }
+        catch (SqlException sqlException)
+        {
+            var failedUserStorageException = 
+                new FailedUserStorageException(sqlException);
+
+            throw CreateAndLogCriticalDependencyException(failedUserStorageException);
         }
     }
 
