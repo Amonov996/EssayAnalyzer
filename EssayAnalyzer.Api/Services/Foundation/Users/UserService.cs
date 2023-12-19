@@ -25,7 +25,7 @@ public partial class UserService : IUserService
 
     public IQueryable<User> RetrieveAllUsers()
     {
-        throw new NotImplementedException();
+        return this.storageBroker.SelectAllUsers();
     }
 
     public async ValueTask<User> RetrieveUserByIdAsync(Guid id)
