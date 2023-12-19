@@ -15,27 +15,33 @@ public partial class UserServiceTests
         // given
         User randomUser = CreateRandomUser();
         SqlException sqlException = GetSqlException();
-        
-        var expectedFailedUserStorageException = 
+
+        var failedUserStorageException = 
             new FailedUserStorageException(sqlException);
+
+        var expectedUserDependencyException = 
+            new UserDependencyException(failedUserStorageException);
+
+        this.storageBrokerMock.Setup(broker =>
+            broker.InsertUserAsync(randomUser)).ThrowsAsync(sqlException);
         
         // when
         ValueTask<User> addUserTask = this.userService.AddUserAsync(randomUser);
 
-        FailedUserStorageException actualFailedUserStorageException =
-            await Assert.ThrowsAsync<FailedUserStorageException>(addUserTask.AsTask);
+        UserDependencyException actualUserDependencyException =
+            await Assert.ThrowsAsync<UserDependencyException>(addUserTask.AsTask);
 
         // then
-        actualFailedUserStorageException.Should().BeEquivalentTo(expectedFailedUserStorageException);
+        actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
+        
+        this.storageBrokerMock.Verify(broker =>
+            broker.InsertUserAsync(randomUser), Times.Once);
         
         this.loggingBrokerMock.Verify(broker => 
-            broker.LogCritical(It.Is(SameExceptionAs(expectedFailedUserStorageException))),
+            broker.LogCritical(It.Is(SameExceptionAs(expectedUserDependencyException))),
             Times.Once);
         
-        this.storageBrokerMock.Verify(broker => 
-            broker.InsertUserAsync(randomUser),Times.Never);
-        
-        this.loggingBrokerMock.VerifyNoOtherCalls();
         this.storageBrokerMock.VerifyNoOtherCalls();
+        this.loggingBrokerMock.VerifyNoOtherCalls();
     }
 }
