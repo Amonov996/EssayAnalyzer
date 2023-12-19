@@ -40,7 +40,7 @@ public partial class EssayService
           }
           catch (NotFoundEssayException notFoundException)
           {
-               throw CreateAdnLogValidationException(notFoundException);
+               throw new NotImplementedException();
           }
           catch (Exception exception)
           {
