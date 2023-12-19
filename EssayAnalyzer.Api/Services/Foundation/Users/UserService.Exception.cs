@@ -82,10 +82,17 @@ public partial class UserService
         }
         catch (SqlException sqlException)
         {
-            var failedUserStorageException = 
+            var failedUserStorageException =
                 new FailedUserStorageException(sqlException);
 
             throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+        }
+        catch (Exception exception)
+        {
+            var failedUserServiceException = 
+                new FailedUserServiceException(exception);
+
+            throw CreateAndLogServiceException(failedUserServiceException);
         }
     }
 
