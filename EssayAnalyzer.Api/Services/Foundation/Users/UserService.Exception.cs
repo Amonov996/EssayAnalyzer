@@ -1,5 +1,6 @@
 using EssayAnalyzer.Api.Models.Foundation.Users;
 using EssayAnalyzer.Api.Models.Foundation.Users.Exceptions;
+using Microsoft.Data.SqlClient;
 using Xeptions;
 
 namespace EssayAnalyzer.Api.Services.Foundation.Users;
@@ -22,6 +23,22 @@ public partial class UserService
         {
             throw CreateAndLogValidationException(invalidUserException);
         }
+        catch (SqlException sqlException)
+        {
+            var failedUserStorageException = 
+                new FailedUserStorageException(sqlException);
+
+            throw CreateAndLogCriticalDependencyException(failedUserStorageException);
+        }
+    }
+
+    private UserDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+    {
+        var userDependencyException = 
+            new UserDependencyException(exception);
+
+        this.loggingBroker.LogCritical(userDependencyException);
+        return userDependencyException;
     }
 
     private UserValidationException CreateAndLogValidationException(Xeption exception)
