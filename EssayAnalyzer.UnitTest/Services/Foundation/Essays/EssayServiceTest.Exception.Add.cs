@@ -1,5 +1,7 @@
+using EFxceptions.Models.Exceptions;
 using EssayAnalyzer.Api.Models.Foundation.Essays;
 using EssayAnalyzer.Api.Models.Foundation.Essays.Exceptions;
+using EssayAnalyzer.Api.Services.Foundation.Essays.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -42,5 +44,38 @@ public partial class EssayServiceTest
         
         this.loggingBrokerMock.VerifyNoOtherCalls();
         this.storageBrokerMock.VerifyNoOtherCalls();
+    }
+
+    [Fact] public async Task ShouldThrowDependencyValidationExceptionOnAddIfDuplicateKeyErrorOccursAndLogItAsync()
+    {
+        //given
+        Essay randomEssay = CreateRandomEssay();
+        string randomMessage = GetRandomString();
+
+        var duplicateKeyException = new DuplicateKeyException(randomMessage);
+        var alreadyExistsEssayException = new AlreadyExitsEssayException(duplicateKeyException);
+        
+        var expectedEssayDependencyValidationException =
+            new EssayDependencyValidationException(alreadyExistsEssayException);
+
+        this.storageBrokerMock.Setup(broker =>
+            broker.InsertEssayAsync(randomEssay)).ThrowsAsync(duplicateKeyException);
+        
+        //when
+        ValueTask<Essay> addEssayTask = this.essayService.AddEssayAsync(randomEssay);
+
+        EssayDependencyValidationException actualEssayDependencyValidationException =
+            await Assert.ThrowsAsync<EssayDependencyValidationException>(addEssayTask.AsTask);
+        
+        //then
+        actualEssayDependencyValidationException.Should()
+            .BeEquivalentTo(expectedEssayDependencyValidationException);
+        
+        this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
+            SameExceptionAs(expectedEssayDependencyValidationException))), Times.Once);
+        
+        this.loggingBrokerMock.VerifyNoOtherCalls();
+        this.storageBrokerMock.VerifyNoOtherCalls();
+        
     }
 }
