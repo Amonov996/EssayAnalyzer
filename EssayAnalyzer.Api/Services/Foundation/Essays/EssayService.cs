@@ -24,7 +24,7 @@ public partial class EssayService: IEssayService
                
 
 
-    public IQueryable<Essay> RetrieveAllEssays()=> 
+    public IQueryable<Essay> RetrieveAllEssays() => 
                 this.storageBroker.SelectAllEssays();
 
     public ValueTask<Essay> RetrieveEssayByIdAsync(Guid id) => 
