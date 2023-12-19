@@ -51,11 +51,27 @@ public partial class UserService
         }
         catch (DbUpdateException dbUpdateException)
         {
-            var failedUserStorageException = 
+            var failedUserStorageException =
                 new FailedUserStorageException(dbUpdateException);
 
             throw CreateAndLogDependencyException(failedUserStorageException);
         }
+        catch (Exception exception)
+        {
+            var failedUserServiceException = 
+                new FailedUserServiceException(exception);
+
+            throw CreateAndLogServiceException(failedUserServiceException);
+        }
+    }
+
+    private Exception CreateAndLogServiceException(Xeption exception)
+    {
+        var userServiceException = 
+            new UserServiceException(exception);
+
+        this.loggingBroker.LogError(userServiceException);
+        return userServiceException;
     }
 
     private IQueryable<User> TryCatch(ReturnUsersFunction returnUsersFunction)

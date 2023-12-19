@@ -161,4 +161,37 @@ public partial class UserServiceTests
         this.storageBrokerMock.VerifyNoOtherCalls();
         this.loggingBrokerMock.VerifyNoOtherCalls();
     }
+
+    [Fact]
+    public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
+    {
+        // given
+        User randomUser = CreateRandomUser();
+        Exception serviceException = new Exception();
+
+        var failedUserServiceException = 
+            new FailedUserServiceException(serviceException);
+
+        var expectedUserServiceException = 
+            new UserServiceException(failedUserServiceException);
+
+        this.storageBrokerMock.Setup(broker =>
+            broker.InsertUserAsync(randomUser)).ThrowsAsync(serviceException);
+        
+        // when
+        ValueTask<User> addUserTask = this.userService.AddUserAsync(randomUser);
+
+        UserServiceException actualUserServiceException =
+            await Assert.ThrowsAsync<UserServiceException>(addUserTask.AsTask);
+
+        // then
+        actualUserServiceException.Should().BeEquivalentTo(expectedUserServiceException);
+        
+        this.storageBrokerMock.Verify(broker => 
+            broker.InsertUserAsync(randomUser), Times.Once);
+        
+        this.loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedUserServiceException)))
+            ,Times.Once);
+    }
 }
