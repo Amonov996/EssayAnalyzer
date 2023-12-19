@@ -12,6 +12,7 @@ public partial class ResultService
 
         Validate(
                 (Rule: IsInvalid(result.Id), Parametr: nameof(Result.Id)),
+                (Rule: IsInvalid(result.EssayId), Parametr: nameof(Result.EssayId)),
                 (Rule: IsInvalid(result.Feedback), Parametr: nameof(Result.Feedback)));
     }
 
@@ -26,13 +27,13 @@ public partial class ResultService
     private static dynamic IsInvalid(Guid id) => new
     {
         Condition = id == Guid.Empty,
-        Message = "Id is required."
+        Message = "Id is required"
     };
 
     private static dynamic IsInvalid(string text) => new
     {
         Condition = String.IsNullOrWhiteSpace(text),
-        Message = "Text is required."
+        Message = "Text is required"
     };
 
     private static void Validate(params (dynamic Rule, string Parametr)[] validations)
