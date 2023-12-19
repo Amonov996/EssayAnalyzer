@@ -36,6 +36,7 @@ public partial class EssayService: IEssayService
             return maybeEssay;
 
         });
+
     public ValueTask<Essay> RemoveEssayByIdAsync(Guid id) => 
-                this.storageBroker.SelectEssayByIdAsync(id);
+        throw new NotImplementedException();
 }
