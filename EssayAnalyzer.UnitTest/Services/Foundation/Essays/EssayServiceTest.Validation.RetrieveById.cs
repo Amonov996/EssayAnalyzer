@@ -16,14 +16,15 @@ public partial class EssayServiceTest
         var invalidEssayException = new InvalidEssayException();
         
         invalidEssayException.AddData(
-            key: nameof(Essay.Id));
+            key: nameof(Essay.Id),
+            values: "Id is required");
 
         var expectedEssayValidationException =
             new EssayValidationException(invalidEssayException);
         
         //when
         ValueTask<Essay> retrieveEssayByIdTask =
-            this.essayService.RemoveEssayByIdAsync(invalidEssayId);
+            this.essayService.RetrieveEssayByIdAsync(invalidEssayId);
 
         EssayValidationException actualEssayValidationException =
             await Assert.ThrowsAsync<EssayValidationException>(retrieveEssayByIdTask.AsTask);
@@ -31,7 +32,7 @@ public partial class EssayServiceTest
         //then
         actualEssayValidationException.Should().BeEquivalentTo(expectedEssayValidationException);
 
-        this.loggingBrokerMock.Verify(broker => broker.LogCritical(It.Is(
+        this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
             SameExceptionAs(expectedEssayValidationException))), Times.Once);
         
         this.storageBrokerMock.Verify(broker => 

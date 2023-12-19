@@ -38,6 +38,10 @@ public partial class EssayService
 
                throw CreateAndLogDependencyValidationException(alreadyExistsEssayException);
           }
+          catch (NotFoundEssayException notFoundException)
+          {
+               throw CreateAdnLogValidationException(notFoundException);
+          }
           catch (Exception exception)
           {
                var failedEssayException = new FailedEssayServiceException(exception);
