@@ -12,7 +12,7 @@ namespace EssayAnalyzer.UnitTest.Services.Foundation.Essays;
 public partial class EssayServiceTest
 {
     [Fact]
-    public async Task ShouldThrowsCriticalExceptionOnAddIfErrorOccursAndLogItAsync()
+    public async Task ShouldThrowCriticalDependencyExceptionIfSqlErrorOccursAndLogItAsync()
     {
         //given
         Essay randomEssay = CreateRandomEssay();
