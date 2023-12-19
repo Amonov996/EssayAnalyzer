@@ -39,7 +39,40 @@ public partial class EssayServiceTest
         
         this.storageBrokerMock.VerifyNoOtherCalls();
         this.loggingBrokerMock.VerifyNoOtherCalls();
+    }
 
+    [Fact]
+    public void ShouldThrowServiceExceptionOnRetrieveAllEssaysServiceErrorOccursAndLogIt()
+    {
+        //given
+        string exceptionMessage = GetRandomString();
+        var serviceException = new Exception();
+        
+        var failedEssayServiceException = 
+            new FailedEssayServiceException(serviceException);
+        
+        var expectedEssayServiceException = 
+            new EssayServiceException(failedEssayServiceException);
+
+        this.storageBrokerMock.Setup(broker => 
+            broker.SelectAllEssays()).Throws(serviceException);
+        
+        //when
+        Action retrieveAllEssaysAction = () => this.essayService.RetrieveAllEssays();
+
+        EssayServiceException actualEssayServiceException =
+            Assert.Throws<EssayServiceException>(retrieveAllEssaysAction);
+        
+        //then
+        actualEssayServiceException.Should().BeEquivalentTo(expectedEssayServiceException);
+        
+        this.storageBrokerMock.Verify(broker => broker.SelectAllEssays(), Times.Once);
+        
+        this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
+            SameExceptionAs(expectedEssayServiceException))), Times.Once);
+        
+        this.storageBrokerMock.VerifyNoOtherCalls();
+        this.loggingBrokerMock.VerifyNoOtherCalls();
     }
     
 }
