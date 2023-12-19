@@ -74,8 +74,11 @@ public partial class EssayServiceTest
         this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
             SameExceptionAs(expectedEssayDependencyValidationException))), Times.Once);
         
-        this.loggingBrokerMock.VerifyNoOtherCalls();
+        this.storageBrokerMock.Verify(broker => 
+                broker.InsertEssayAsync(It.IsAny<Essay>()), Times.Once);
+        
         this.storageBrokerMock.VerifyNoOtherCalls();
+        this.loggingBrokerMock.VerifyNoOtherCalls();
         
     }
 }

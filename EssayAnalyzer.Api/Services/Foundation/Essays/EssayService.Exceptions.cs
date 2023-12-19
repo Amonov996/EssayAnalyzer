@@ -1,5 +1,7 @@
+using EFxceptions.Models.Exceptions;
 using EssayAnalyzer.Api.Models.Foundation.Essays;
 using EssayAnalyzer.Api.Models.Foundation.Essays.Exceptions;
+using EssayAnalyzer.Api.Services.Foundation.Essays.Exceptions;
 using Microsoft.Data.SqlClient;
 using Xeptions;
 
@@ -29,11 +31,25 @@ public partial class EssayService
 
                throw CreateAndLogCriticalDependencyException(essayStorageException);
           }
+          catch (DuplicateKeyException duplicateKeyException)
+          {
+               var alreadyExistsEssayException = new AlreadyExitsEssayException(duplicateKeyException);
+
+               throw CreateAndLogDependencyValidationException(alreadyExistsEssayException);
+          }
           catch (Exception exception)
           {
                var failedEssayException = new FailedEssayServiceException(exception);
                throw CreateAndLogServiceException(failedEssayException);
           }
+     }
+
+     private EssayDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+     {
+          var essayDependencyValidationException = new EssayDependencyValidationException(exception);
+          this.loggingBroker.LogError(essayDependencyValidationException);
+          
+          return essayDependencyValidationException;
      }
 
      private EssayDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
