@@ -87,4 +87,41 @@ public partial class UserServiceTests
         this.loggingBrokerMock.VerifyNoOtherCalls();
         this.storageBrokerMock.VerifyNoOtherCalls();
     }
+
+    [Fact]
+    public async Task ShouldThrowValidationExceptionOnAddIfReferenceErrorOccursAndLogItAsync()
+    {
+        // given
+        User randomUser = CreateRandomUser();
+        string randomMessage = GetRandomMessage();
+        string exceptionMessage = randomMessage;
+
+        var foreignKeyConstraintConflictException =
+            new ForeignKeyConstraintConflictException(exceptionMessage);
+
+        InvalidUserRefenerenceException invalidUserRefenerenceException =
+            new InvalidUserRefenerenceException(foreignKeyConstraintConflictException);
+
+        var expectedUserDependencyValidationException =
+            new UserDependencyValidationException(invalidUserRefenerenceException);
+
+        this.storageBrokerMock.Setup(broker =>
+            broker.InsertUserAsync(randomUser)).ThrowsAsync(foreignKeyConstraintConflictException);
+        
+        // when
+        ValueTask<User> addUserTask = this.userService.AddUserAsync(randomUser);
+
+        UserDependencyValidationException actualUserDependencyException =
+            await Assert.ThrowsAsync<UserDependencyValidationException>(addUserTask.AsTask);
+
+        // then
+        actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyValidationException);
+        
+        this.storageBrokerMock.Verify(broker => 
+            broker.InsertUserAsync(It.IsAny<User>()),Times.Once);
+        
+        this.loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedUserDependencyValidationException))),
+            Times.Once);
+    }
 }
