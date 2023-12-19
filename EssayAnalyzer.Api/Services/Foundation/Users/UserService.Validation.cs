@@ -36,16 +36,16 @@ public partial class UserService
         Message = "Text is required"
     };
 
-    private static void Validate(params (dynamic rule, string Parameter)[] validations)
+    private static void Validate(params (dynamic Rule, string Parameter)[] validations)
     {
         var invalidUserException = new InvalidUserException();
 
-        foreach ((dynamic rule, string paramater) in validations)
+        foreach ((dynamic rule, string parameter) in validations)
         {
             if (rule.Condition)
             {
                 invalidUserException.UpsertDataList(
-                    key: paramater,
+                    key: parameter,
                     value: rule.Message);
             }
         }
