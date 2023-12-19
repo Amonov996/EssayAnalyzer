@@ -19,7 +19,6 @@ public partial class ResultService: IResultService
         TryCatch(async () =>
         {
             ValidateResultOnAdd(result);
-
             return await this.storageBroker.InsertResultAsync(result);
         });
 

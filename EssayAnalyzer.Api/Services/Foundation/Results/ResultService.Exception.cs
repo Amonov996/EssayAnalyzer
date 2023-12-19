@@ -26,9 +26,10 @@ public partial class ResultService
         }
     }
 
-    private Exception CreateAndLogValidationException(Xeption exception)
+    private ResultValidationException CreateAndLogValidationException(Xeption exception)
     {
-        var resultValidationException = new ResultValidationException(exception);
+        var resultValidationException = 
+            new ResultValidationException(exception);
 
         this.loggingBroker.LogError(resultValidationException);
 
