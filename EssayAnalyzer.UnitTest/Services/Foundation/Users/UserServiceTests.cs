@@ -27,7 +27,13 @@ public partial class UserServiceTests
 
     private static User CreateRandomUser() =>
         CreateUserFiller().Create();
-
+    private static IQueryable<User> CreateRandomUsers()
+    {
+        return CreateUserFiller()
+            .Create(count: GetRandomNumber())
+            .AsQueryable();
+    }
+    
     private static Filler<User> CreateUserFiller() =>
         new Filler<User>();
 
