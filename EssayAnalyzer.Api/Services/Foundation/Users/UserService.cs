@@ -28,7 +28,7 @@ public partial class UserService : IUserService
     
     public async ValueTask<User> RetrieveUserByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await this.storageBroker.SelectUserByIdAsync(id);
     }
 
     public async ValueTask<User> ModifyUserAsync(User user)
