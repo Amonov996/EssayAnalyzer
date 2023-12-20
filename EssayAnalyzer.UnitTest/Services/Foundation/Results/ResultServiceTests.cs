@@ -51,4 +51,7 @@ public partial class ResultServiceTests
 
     private static string GetRandomMessage() =>
         new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
+    private static string GetRandomString() =>
+        new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 }

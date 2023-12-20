@@ -44,4 +44,42 @@ public partial class ResultServiceTests
         this.storageBrokerMock.VerifyNoOtherCalls();
         this.loggingBrokerMock.VerifyNoOtherCalls();
     }
+
+    [Fact]
+    public async Task ShouldThrowServiceExceptionOnRetrieveAllIfServiceExceptionOccursAndLogItAsync()
+    {
+        //given
+        string exceptionMessage = GetRandomString();
+        var serviceException = new Exception(exceptionMessage);
+
+        var failedResultServiceException =
+            new FailedResultServiceException(serviceException);
+
+        var expectedResultServiceException =
+            new ResultServiceException(failedResultServiceException);
+
+        this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllResults())
+            .Throws(serviceException);
+
+        //when
+        Action retrieveAllResultAction = () =>
+            this.resultService.RetrieveAllResults();
+
+        ResultServiceException actualResultServiceException =
+            Assert.Throws<ResultServiceException>(retrieveAllResultAction);
+
+        //then
+        actualResultServiceException.Should().BeEquivalentTo(expectedResultServiceException);
+
+        this.storageBrokerMock.Verify(broker =>
+            broker.SelectAllResults(), Times.Once);
+
+        this.loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedResultServiceException))),
+            Times.Once);
+
+        this.storageBrokerMock.VerifyNoOtherCalls();
+        this.loggingBrokerMock.VerifyNoOtherCalls();
+    }
 }
