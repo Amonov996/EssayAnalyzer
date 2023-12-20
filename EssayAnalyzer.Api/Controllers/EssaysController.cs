@@ -45,11 +45,23 @@ public class EssaysController : RESTFulController
     }
     
     [HttpGet("get/all-essay")]
-    public ActionResult<IQueryable<Essay>> GetEssays()
+    public ActionResult<IQueryable<Essay>> GetAllEssays()
     {
-        IQueryable<Essay> essays = this.essayService.RetrieveAllEssays();
-        
-        return Ok(essays);
+        try
+        {
+            IQueryable<Essay> essays = this.essayService.RetrieveAllEssays();
+
+            return Ok(essays);
+        }
+        catch (EssayDependencyException essayDependencyException)
+        {
+            return InternalServerError(essayDependencyException.InnerException);
+        }
+        catch (EssayServiceException essayServiceException)
+        {
+            return InternalServerError(essayServiceException.InnerException);
+        }
+      
     }
 
     [HttpGet("get/essay-by-id/{guid}")]
