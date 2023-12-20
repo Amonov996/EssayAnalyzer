@@ -34,7 +34,6 @@ public partial class EssayService: IEssayService
             ValidateStorageEssayExists(maybeEssay, id);
 
             return maybeEssay;
-
         });
 
     public ValueTask<Essay> RemoveEssayByIdAsync(Guid id) => 
