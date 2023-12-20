@@ -8,7 +8,7 @@ namespace EssayAnalyzer.UnitTest.Services.Foundation.Users;
 public partial class UserServiceTests
 {
     [Fact]
-    public async Task ShouldRetrieveAllUsers()
+    public async Task ShouldRetrieveAllUsersAsync()
     {
         // given 
         IQueryable<User> randomUsers = CreateRandomUsers();
