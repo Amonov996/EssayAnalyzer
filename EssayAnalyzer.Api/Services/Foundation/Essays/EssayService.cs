@@ -15,23 +15,19 @@ public partial class EssayService: IEssayService
         this.storageBroker = storageBroker;
     }
 
-    public ValueTask<Essay> AddEssayAsync(Essay essay)
-    {
-        throw new NotImplementedException();
-    }
+    public ValueTask<Essay> AddEssayAsync(Essay essay) =>
+                TryCatch(async () =>
+                {
+                    ValidateEssay(essay);
+                    return await this.storageBroker.InsertEssayAsync(essay);
+                });
+               
+    public IQueryable<Essay> RetrieveAllEssays() => 
+        TryCatch(() => this.storageBroker.SelectAllEssays());
 
-    public ValueTask<IQueryable<Essay>> RetrieveEssaysAsync()
-    {
-         throw new NotImplementedException();
-    }
+    public ValueTask<Essay> RetrieveEssayByIdAsync(Guid id) =>
+        this.storageBroker.SelectEssayByIdAsync(id);
 
-    public ValueTask<Essay> RetrieveEssayByIdAsync(Guid id)
-    {
-         throw new NotImplementedException();
-    }
-
-    public ValueTask<Essay> RemoveEssayByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
+    public ValueTask<Essay> RemoveEssayByIdAsync(Guid id) => 
+                this.storageBroker.SelectEssayByIdAsync(id);
 }
