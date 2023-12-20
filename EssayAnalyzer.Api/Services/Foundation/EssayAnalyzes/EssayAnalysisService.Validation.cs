@@ -8,9 +8,10 @@ namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes
         {
             ValidateEssayAnalysisIsNotNull(essay);
         }
+        
         private static void ValidateEssayAnalysisIsNotNull(string essay)
         {
-            if (essay == null)
+            if (essay is null)
             {
                 throw new NullEssayAnalysisException();
             }
