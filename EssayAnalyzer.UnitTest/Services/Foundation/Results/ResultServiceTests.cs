@@ -2,13 +2,10 @@
 using EssayAnalyzer.Api.Brokers.Storages;
 using EssayAnalyzer.Api.Models.Foundation.Results;
 using EssayAnalyzer.Api.Services.Foundation.Results;
+using Microsoft.Data.SqlClient;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
 using Xeptions;
 
@@ -32,6 +29,9 @@ public partial class ResultServiceTests
 
     private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
         actualException => actualException.SameExceptionAs(expectedException);
+
+    private static SqlException GetSqlException() =>
+        (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
     private static Result CreateRandomResult() =>
         CreateResultFiller().Create();

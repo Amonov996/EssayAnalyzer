@@ -1,7 +1,6 @@
 using EssayAnalyzer.Api.Models.Foundation.Users.Exceptions;
 using EssayAnalyzer.Api.Models.Foundation.Results;
 using EssayAnalyzer.Api.Models.Foundation.Results.Exceptions;
-using System;
 using Xeptions;
 
 namespace EssayAnalyzer.Api.Services.Foundation.Results;
