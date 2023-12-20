@@ -36,7 +36,18 @@ public partial class EssayService
             throw new NullEssayException();
         }
     }
+    
+    private static void ValidateEssayId(Guid id) =>
+        Validate((Rule:IsInvalid(id), Parameter: nameof(Essay.Id)));
 
+    private void ValidateStorageEssayExists(Essay maybeEssay, Guid id)
+    {
+        if (maybeEssay is null)
+        {
+            throw new NotFoundEssayException(id);
+        }
+    }
+    
     private static void Validate(params (dynamic Rule, string Parameter)[] validation)
     {
         var invalidEssayException = new InvalidEssayException();

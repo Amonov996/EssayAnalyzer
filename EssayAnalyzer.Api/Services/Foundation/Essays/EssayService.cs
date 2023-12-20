@@ -26,8 +26,16 @@ public partial class EssayService: IEssayService
         TryCatch(() => this.storageBroker.SelectAllEssays());
 
     public ValueTask<Essay> RetrieveEssayByIdAsync(Guid id) =>
-        this.storageBroker.SelectEssayByIdAsync(id);
+        TryCatch(async () =>
+        {
+            ValidateEssayId(id);
+            Essay maybeEssay = await this.storageBroker.SelectEssayByIdAsync(id);
+
+            ValidateStorageEssayExists(maybeEssay, id);
+
+            return maybeEssay;
+        });
 
     public ValueTask<Essay> RemoveEssayByIdAsync(Guid id) => 
-                this.storageBroker.SelectEssayByIdAsync(id);
+        throw new NotImplementedException();
 }

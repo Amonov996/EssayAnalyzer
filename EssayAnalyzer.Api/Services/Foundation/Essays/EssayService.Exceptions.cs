@@ -29,7 +29,7 @@ public partial class EssayService
           catch (SqlException sqlException)
           {
                var essayStorageException = new FailedEssayStorageException(sqlException);
-
+             
                throw CreateAndLogCriticalDependencyException(essayStorageException);
           }
           catch (DuplicateKeyException duplicateKeyException)
@@ -37,6 +37,10 @@ public partial class EssayService
                var alreadyExistsEssayException = new AlreadyExitsEssayException(duplicateKeyException);
 
                throw CreateAndLogDependencyValidationException(alreadyExistsEssayException);
+          }
+          catch (NotFoundEssayException notFoundException)
+          {
+               throw CreateAdnLogValidationException(notFoundException);
           }
           catch (Exception exception)
           {
