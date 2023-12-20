@@ -30,12 +30,11 @@ public partial class EssayService: IEssayService
         {
             ValidateEssayId(id);
             Essay maybeEssay = await this.storageBroker.SelectEssayByIdAsync(id);
-
             ValidateStorageEssayExists(maybeEssay, id);
 
             return maybeEssay;
-
         });
+        
     public ValueTask<Essay> RemoveEssayByIdAsync(Guid id) => 
                 this.storageBroker.SelectEssayByIdAsync(id);
 }
