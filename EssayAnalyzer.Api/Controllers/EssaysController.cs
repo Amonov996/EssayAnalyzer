@@ -67,10 +67,29 @@ public class EssaysController : RESTFulController
     [HttpGet("get/essay-by-id/{guid}")]
     public async ValueTask<ActionResult<Essay>> GetEssayById(Guid id)
     {
-        Essay retrievedEssay = await this.essayService.RetrieveEssayByIdAsync(id);
-        
-        return Ok(retrievedEssay);
-    }
-    
+        try
+        {
+            return await this.essayService.RetrieveEssayByIdAsync(id);
 
+            // return Ok(retrievedEssay);
+        }
+        catch (EssayDependencyException essayDependencyException)
+        {
+            return InternalServerError(essayDependencyException.InnerException);
+        }
+        catch (EssayValidationException essayValidationException)
+            when (essayValidationException.InnerException is InvalidEssayException)
+        {
+            return BadRequest(essayValidationException.InnerException);
+        }
+        catch (EssayValidationException essayValidationException)
+            when (essayValidationException.InnerException is NotFoundEssayException)
+        {
+            return NotFound(essayValidationException.InnerException);
+        }
+        catch (EssayServiceException essayServiceException)
+        {
+            return InternalServerError(essayServiceException.InnerException);
+        }
+    }
 }
