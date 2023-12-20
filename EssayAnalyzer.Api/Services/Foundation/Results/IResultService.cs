@@ -5,7 +5,7 @@ namespace EssayAnalyzer.Api.Services.Foundation.Results;
 public interface IResultService
 {
     ValueTask<Result> AddResultAsync(Result result);
-    ValueTask<ICollection<Result>> RetrieveAllResults();
+    IQueryable<Result> RetrieveAllResults();
     ValueTask<Result> RetrieveResultByIdAsync(Guid id);
     ValueTask<Result> RemoveResultByIdAsync(Guid id);
 }

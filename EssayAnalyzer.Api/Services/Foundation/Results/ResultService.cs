@@ -22,7 +22,7 @@ public partial class ResultService: IResultService
             return await this.storageBroker.InsertResultAsync(result);
         });
 
-    public ValueTask<ICollection<Result>> RetrieveAllResults()
+    public IQueryable<Result> RetrieveAllResults()
     {
         throw new NotImplementedException();
     }

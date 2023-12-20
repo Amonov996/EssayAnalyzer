@@ -11,7 +11,7 @@ public partial class ResultService
 {
     private delegate ValueTask<Result> ReturnResultFunction();
 
-    private delegate IQueryable<Result> ReturningAllResultsFunction();
+    //private delegate IQueryable<Result> ReturningAllResultsFunction();
 
     private async ValueTask<Result> TryCatch(ReturnResultFunction returnResultFunction)
     {
@@ -43,27 +43,27 @@ public partial class ResultService
         }
     }
 
-    private IQueryable<Result> TryCatch(ReturningAllResultsFunction returningAllResultsFunction)
-    {
-        try
-        {
-            return returningAllResultsFunction();
-        }
-        catch (SqlException sqlException)
-        {
-            var failedResultStorageException =
-                new FailedResultStorageException(sqlException);
+    //private IQueryable<Result> TryCatch(ReturningAllResultsFunction returningAllResultsFunction)
+    //{
+    //    try
+    //    {
+    //        return returningAllResultsFunction();
+    //    }
+    //    catch (SqlException sqlException)
+    //    {
+    //        var failedResultStorageException =
+    //            new FailedResultStorageException(sqlException);
 
-            throw CreateAndLogCriticalDependencyException(failedResultStorageException);
-        }
-        catch (Exception exception)
-        {
-            var failedResultServiceException =
-                new FailedResultServiceException(exception);
+    //        throw CreateAndLogCriticalDependencyException(failedResultStorageException);
+    //    }
+    //    catch (Exception exception)
+    //    {
+    //        var failedResultServiceException =
+    //            new FailedResultServiceException(exception);
 
-            throw CreateAndLogServiceException(failedResultServiceException);
-        }
-    }
+    //        throw CreateAndLogServiceException(failedResultServiceException);
+    //    }
+    //}
 
     private ResultServiceException CreateAndLogServiceException(Xeption exception)
     {
