@@ -1,4 +1,4 @@
-﻿using EssayAnalyzer.Api.Brokers.Loggings;
+using EssayAnalyzer.Api.Brokers.Loggings;
 using EssayAnalyzer.Api.Brokers.OpenAis;
 using Standard.AI.OpenAI.Models.Services.Foundations.ChatCompletions;
 

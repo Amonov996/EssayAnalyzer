@@ -1,22 +1,17 @@
-﻿using EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes.Exception;
+using EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes.Exception;
 using Xeptions;
 
-namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes
-{
-    public partial class EssayAnalysisService
-    {
-        private delegate ValueTask<string> ReturnEssayAnalysisAsync();
+namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
 
-        private async ValueTask<string> TryCatch(ReturnEssayAnalysisAsync returnEssayAnalysisAsync)
+public partial class EssayAnalysisService
+{
+    private delegate ValueTask<string> ReturnEssayAnalysisAsync();
+
+    private async ValueTask<string> TryCatch(ReturnEssayAnalysisAsync returnEssayAnalysisAsync)
+    {
+        try
         {
-            try
-            {
-                return await returnEssayAnalysisAsync();
-            }
-            catch (NullEssayAnalysisException nullEssayAnalysisException)
-            {
-                throw CreateAndLogValidationException(nullEssayAnalysisException);
-            }
+            return await returnEssayAnalysisAsync();
         }
         
         private EssayAnalysisServiceValidationException CreateAndLogValidationException(Xeption exception)
@@ -27,5 +22,13 @@ namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes
             this.loggingBroker.LogError(essayAnalysisServiceValidationException);
             return essayAnalysisServiceValidationException;
         }
+    }
+    private EssayAnalysisServiceValiationException CreateAndLogValidationException(Xeption exceptionn)
+    {
+        var essayAnalysisServiceValiationException =
+            new EssayAnalysisServiceValiationException(exceptionn);
+
+        this.loggingBroker.LogError(essayAnalysisServiceValiationException);
+        return essayAnalysisServiceValiationException;
     }
 }

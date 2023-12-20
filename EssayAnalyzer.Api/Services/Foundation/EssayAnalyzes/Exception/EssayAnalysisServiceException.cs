@@ -1,6 +1,8 @@
-﻿using Xeptions;
+using Xeptions;
 
-namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes.Exception
+namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes.Exception;
+
+public class EssayAnalysisServiceException : Xeption
 {
     public class EssayAnalysisServiceException : Xeption
     {
