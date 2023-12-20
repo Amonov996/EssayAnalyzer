@@ -1,20 +1,13 @@
 using EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes.Exception;
 
-namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
-
-public partial class EssayAnalysisService
+namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes
 {
-    private static void ValidateEssayAnalysisOnAdd(string essay)
+    public partial class EssayAnalysisService
     {
-        ValidateEssayAnalysisIsNotNull(essay);
-    }
-    private static void ValidateEssayAnalysisIsNotNull(string essay)
-    {
-        if (essay == null)
+        private static void ValidateEssayAnalysisOnAdd(string essay)
         {
-            throw new NullEssayAnalysisException();
+            ValidateEssayAnalysisIsNotNull(essay);
         }
-        
         private static void ValidateEssayAnalysisIsNotNull(string essay)
         {
             if (essay is null)
