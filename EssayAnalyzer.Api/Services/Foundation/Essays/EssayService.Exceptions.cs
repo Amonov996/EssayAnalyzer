@@ -41,7 +41,6 @@ public partial class EssayService
           catch (NotFoundEssayException notFoundException)
           {
                throw CreateAdnLogValidationException(notFoundException);
-
           }
           catch (Exception exception)
           {
