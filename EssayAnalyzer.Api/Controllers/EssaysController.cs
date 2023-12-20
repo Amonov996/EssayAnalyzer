@@ -21,7 +21,8 @@ public class EssaysController : RESTFulController
     {
         try
         {
-            Essay addEssayAsync = await this.essayService.AddEssayAsync(essay);
+            Essay addEssayAsync = 
+                await this.essayService.AddEssayAsync(essay);
 
             return Created(addEssayAsync);
         }
