@@ -21,7 +21,9 @@ public class EssaysController : RESTFulController
     {
         try
         {
-            return await this.essayService.AddEssayAsync(essay);
+            Essay addEssayAsync = await this.essayService.AddEssayAsync(essay);
+
+            return Created(addEssayAsync);
         }
         catch (EssayValidationException essayValidationException)
         {
