@@ -27,6 +27,13 @@ public partial class ResultServiceTests
             loggingBroker: this.loggingBrokerMock.Object);
     }
 
+    private static IQueryable<Result> CreateRandomResults()
+    {
+        return CreateResultFiller()
+            .Create(count: GetRandomNumber())
+            .AsQueryable();
+    }
+
     private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
         actualException => actualException.SameExceptionAs(expectedException);
 
@@ -38,4 +45,10 @@ public partial class ResultServiceTests
 
     private static Filler<Result> CreateResultFiller() =>
         new Filler<Result>();
+
+    private static int GetRandomNumber() =>
+        new IntRange(min: 0, max: 99).GetValue();
+
+    private static string GetRandomMessage() =>
+        new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 }
