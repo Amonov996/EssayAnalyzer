@@ -23,6 +23,8 @@ public sealed partial class StorageBroker : EFxceptionsContext, IStorageBroker
     {
         AddEssayConfiguration(modelBuilder);
         AddResultConfiguration(modelBuilder);
+        
+        base.OnModelCreating(modelBuilder);
     }
 
     public async ValueTask<T> InsertAsync<T>(T @object)
