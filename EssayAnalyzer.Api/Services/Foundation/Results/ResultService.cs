@@ -25,7 +25,6 @@ public partial class ResultService: IResultService
     public IQueryable<Result> RetrieveAllResults() =>
         TryCatch(() => this.storageBroker.SelectAllResults());
 
-
     public ValueTask<Result> RetrieveResultByIdAsync(Guid id)
     {
         throw new NotImplementedException();
