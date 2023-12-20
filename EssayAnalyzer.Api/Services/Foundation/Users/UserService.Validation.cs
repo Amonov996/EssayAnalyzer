@@ -1,6 +1,8 @@
 using System.Data;
+using System.Reflection.Metadata;
 using EssayAnalyzer.Api.Models.Foundation.Users;
 using EssayAnalyzer.Api.Models.Foundation.Users.Exceptions;
+using Microsoft.Extensions.Options;
 
 namespace EssayAnalyzer.Api.Services.Foundation.Users;
 
@@ -21,6 +23,17 @@ public partial class UserService
         if (user is null)
         {
             throw new NullUserException();
+        }
+    }
+
+    private static void ValidateUserId(Guid id) =>
+        Validate((Rule: IsInvalid(id), Parameter: nameof(User.Id)));
+
+    private static void ValidateUserIsExists(User user, Guid id)
+    {
+        if (user is null)
+        {
+            throw new NotFoundUserException(id);
         }
     }
 

@@ -25,11 +25,18 @@ public partial class UserService : IUserService
 
     public IQueryable<User> RetrieveAllUsers() =>
         TryCatch(() => this.storageBroker.SelectAllUsers());
-    
-    public async ValueTask<User> RetrieveUserByIdAsync(Guid id)
-    {
-        return await this.storageBroker.SelectUserByIdAsync(id);
-    }
+
+    public ValueTask<User> RetrieveUserByIdAsync(Guid id) =>
+        TryCatch(async () =>
+        {
+            ValidateUserId(id);
+            
+            User user = await this.storageBroker
+                .SelectUserByIdAsync(id);
+            
+            ValidateUserIsExists(user, id);
+            return user;
+        });
 
     public async ValueTask<User> ModifyUserAsync(User user)
     {
