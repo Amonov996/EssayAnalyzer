@@ -11,6 +11,8 @@ public partial class ResultService
 {
     private delegate ValueTask<Result> ReturnResultFunction();
 
+    private delegate IQueryable<Result> ReturningAllResultsFunction();
+
     private async ValueTask<Result> TryCatch(ReturnResultFunction returnResultFunction)
     {
         try
@@ -24,6 +26,28 @@ public partial class ResultService
         catch(InvalidResultException invalidResultException)
         {
             throw CreateAndLogValidationException(invalidResultException);
+        }
+        catch (SqlException sqlException)
+        {
+            var failedResultStorageException =
+                new FailedResultStorageException(sqlException);
+
+            throw CreateAndLogCriticalDependencyException(failedResultStorageException);
+        }
+        catch (Exception exception)
+        {
+            var failedResultServiceException =
+                new FailedResultServiceException(exception);
+
+            throw CreateAndLogServiceException(failedResultServiceException);
+        }
+    }
+
+    private IQueryable<Result> TryCatch(ReturningAllResultsFunction returningAllResultsFunction)
+    {
+        try
+        {
+            return returningAllResultsFunction();
         }
         catch (SqlException sqlException)
         {
