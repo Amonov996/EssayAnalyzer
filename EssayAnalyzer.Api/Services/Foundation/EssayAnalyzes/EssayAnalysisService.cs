@@ -42,12 +42,12 @@ namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes
                         new ChatCompletionMessage
                         {
                             Content = "You are IELTS Writing examiner. Give detailed IELTS feedback based on marking criteria of IELTS",
-                            Role = "System",
+                            Role = "system",
                         },
                         new ChatCompletionMessage
                         {
                             Content = essay,
-                            Role = "User",
+                            Role = "user",
                         }
                     },
                 }
