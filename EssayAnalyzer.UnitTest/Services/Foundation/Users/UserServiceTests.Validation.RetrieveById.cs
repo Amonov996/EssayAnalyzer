@@ -68,7 +68,7 @@ public partial class UserServiceTests
         actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
         
         this.storageBrokerMock.Verify(broker =>
-            broker.SelectUserByIdAsync(someUserId));
+            broker.SelectUserByIdAsync(someUserId), Times.Once);
         
         this.loggingBrokerMock.Verify(broker => 
             broker.LogError(It.Is(SameExceptionAs(expectedUserValidationException))),
