@@ -29,8 +29,9 @@ public partial class EssayService: IEssayService
         TryCatch(async () =>
         {
             ValidateEssayId(id);
-            Essay maybeEssay = await this.storageBroker.SelectEssayByIdAsync(id);
-
+            Essay maybeEssay = 
+                await this.storageBroker.SelectEssayByIdAsync(id);
+            
             ValidateStorageEssayExists(maybeEssay, id);
 
             return maybeEssay;
