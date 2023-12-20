@@ -32,16 +32,13 @@ public partial class ResultServiceTests
             Assert.Throws<ResultDependencyException>(retrieveAllResultsAction);
 
         // then
-        actualResultDependencyException.Should().BeEquivalentTo(
-            expectedResultDependencyException);
+        actualResultDependencyException.Should().BeEquivalentTo(expectedResultDependencyException);
 
         this.storageBrokerMock.Verify(broker =>
-                broker.SelectAllResults(),
-            Times.Once);
+            broker.SelectAllResults(),Times.Once);
 
         this.loggingBrokerMock.Verify(broker =>
-                broker.LogCritical(It.Is(SameExceptionAs(
-                    expectedResultDependencyException))),
+            broker.LogCritical(It.Is(SameExceptionAs(expectedResultDependencyException))),
             Times.Once);
 
         this.storageBrokerMock.VerifyNoOtherCalls();
