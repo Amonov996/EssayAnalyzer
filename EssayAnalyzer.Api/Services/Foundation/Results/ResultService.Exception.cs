@@ -3,6 +3,7 @@ using EssayAnalyzer.Api.Models.Foundation.Results;
 using EssayAnalyzer.Api.Models.Foundation.Results.Exceptions;
 using Xeptions;
 using Microsoft.Data.SqlClient;
+using System;
 
 namespace EssayAnalyzer.Api.Services.Foundation.Results;
 
@@ -31,6 +32,22 @@ public partial class ResultService
 
             throw CreateAndLogCriticalDependencyException(failedResultStorageException);
         }
+        catch (Exception exception)
+        {
+            var failedResultServiceException =
+                new FailedResultServiceException(exception);
+
+            throw CreateAndLogServiceException(failedResultServiceException);
+        }
+    }
+
+    private ResultServiceException CreateAndLogServiceException(Xeption exception)
+    {
+        var resultServiceException =
+            new ResultServiceException(exception);
+
+        this.loggingBroker.LogError(resultServiceException);
+        return resultServiceException;
     }
 
     private ResultDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
