@@ -18,9 +18,11 @@ public class TextInputFormatterService : InputFormatter
     public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
     {
         var request = context.HttpContext.Request;
-        using var reader = new StreamReader(request.Body);
-        var content = await reader.ReadToEndAsync();
+        using (var reader = new StreamReader(request.Body))
+        {
+            var content = await reader.ReadToEndAsync();
 
-        return await InputFormatterResult.SuccessAsync(content);
+            return await InputFormatterResult.SuccessAsync(content);
+        }
     }
 }

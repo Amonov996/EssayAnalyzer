@@ -4,9 +4,15 @@ using EssayAnalyzer.Api.Brokers.Storages;
 using EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
 using EssayAnalyzer.Api.Services.Foundation.Essays;
 using EssayAnalyzer.Api.Services.Foundation.Results;
+using EssayAnalyzer.Api.Services.Foundation.TextInputFormatter;
 using EssayAnalyzer.Api.Services.Foundation.Users;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers(options =>
+{
+    options.InputFormatters.Add(new TextInputFormatterService());
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
