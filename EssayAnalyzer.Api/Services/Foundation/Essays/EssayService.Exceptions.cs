@@ -29,7 +29,7 @@ public partial class EssayService
           catch (SqlException sqlException)
           {
                var essayStorageException = new FailedEssayStorageException(sqlException);
-
+             
                throw CreateAndLogCriticalDependencyException(essayStorageException);
           }
           catch (DuplicateKeyException duplicateKeyException)

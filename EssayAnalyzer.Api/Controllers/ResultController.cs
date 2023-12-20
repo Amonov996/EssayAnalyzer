@@ -1,6 +1,7 @@
 namespace EssayAnalyzer.Api.Controllers;
 
-public class ClassController
+
+public class ResultController
 {
     
 }
