@@ -41,7 +41,7 @@ namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes
                     {
                         new ChatCompletionMessage
                         {
-                            Content = "You are IELTS Writing examiner. Give detailed IELTS score based on marking criteria of IELTS",
+                            Content = "You are IELTS Writing examiner. Give detailed IELTS feedback based on marking criteria of IELTS",
                             Role = "System",
                         },
                         new ChatCompletionMessage
