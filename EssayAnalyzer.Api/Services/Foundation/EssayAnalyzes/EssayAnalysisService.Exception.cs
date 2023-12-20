@@ -18,13 +18,14 @@ namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes
                 throw CreateAndLogValidationException(nullEssayAnalysisException);
             }
         }
-        private EssayAnalysisServiceValiationException CreateAndLogValidationException(Xeption exceptionn)
+        
+        private EssayAnalysisServiceValidationException CreateAndLogValidationException(Xeption exception)
         {
-            var essayAnalysisServiceValiationException =
-                new EssayAnalysisServiceValiationException(exceptionn);
+            var essayAnalysisServiceValidationException =
+                new EssayAnalysisServiceValidationException(exception);
 
-            this.loggingBroker.LogError(essayAnalysisServiceValiationException);
-            return essayAnalysisServiceValiationException;
+            this.loggingBroker.LogError(essayAnalysisServiceValidationException);
+            return essayAnalysisServiceValidationException;
         }
     }
 }
