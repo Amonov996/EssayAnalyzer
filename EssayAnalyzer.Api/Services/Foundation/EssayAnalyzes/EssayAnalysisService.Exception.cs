@@ -1,4 +1,4 @@
-﻿using EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes.Exception;
+using EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes.Exception;
 using Xeptions;
 
 namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
@@ -13,9 +13,14 @@ public partial class EssayAnalysisService
         {
             return await returnEssayAnalysisAsync();
         }
-        catch (NullEssayAnalysisException nullEssayAnalysisException)
+        
+        private EssayAnalysisServiceValidationException CreateAndLogValidationException(Xeption exception)
         {
-            throw CreateAndLogValidationException(nullEssayAnalysisException);
+            var essayAnalysisServiceValidationException =
+                new EssayAnalysisServiceValidationException(exception);
+
+            this.loggingBroker.LogError(essayAnalysisServiceValidationException);
+            return essayAnalysisServiceValidationException;
         }
     }
     private EssayAnalysisServiceValiationException CreateAndLogValidationException(Xeption exceptionn)

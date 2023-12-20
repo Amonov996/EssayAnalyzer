@@ -1,4 +1,4 @@
-﻿using EssayAnalyzer.Api.Brokers.Loggings;
+using EssayAnalyzer.Api.Brokers.Loggings;
 using EssayAnalyzer.Api.Brokers.OpenAis;
 using Standard.AI.OpenAI.Models.Services.Foundations.ChatCompletions;
 
@@ -6,6 +6,8 @@ namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
 
 public partial class EssayAnalysisService : IEssayAnalysisService
 {
+
+
     private readonly IOpenAiBroker openAiBroker;
     private readonly ILoggingBroker loggingBroker;
 
@@ -29,7 +31,7 @@ public partial class EssayAnalysisService : IEssayAnalysisService
             return response.Response.Choices.FirstOrDefault().Message.Content;
         });
 
-    private static ChatCompletion CreateRequest(string essay)
+    public static ChatCompletion CreateRequest(string essay)
     {
         return new ChatCompletion
         {
