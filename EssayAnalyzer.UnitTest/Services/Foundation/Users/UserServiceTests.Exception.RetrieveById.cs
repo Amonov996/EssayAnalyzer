@@ -44,4 +44,41 @@ public partial class UserServiceTests
         this.storageBrokerMock.VerifyNoOtherCalls();
         this.loggingBrokerMock.VerifyNoOtherCalls();
     }
+
+    [Fact]
+    public async Task ShouldThrowServiceExceptionOnRetrieveByIdIfServiceErrorOccursAndLogItAsync()
+    {
+        // given 
+        Guid someUserId = Guid.NewGuid();
+        Exception serviceException = new Exception();
+
+        var failedUserServiceException = 
+            new FailedUserServiceException(serviceException);
+
+        var expectedUserServiceException = 
+            new UserServiceException(failedUserServiceException);
+
+        this.storageBrokerMock.Setup(broker =>
+            broker.SelectUserByIdAsync(someUserId)).Throws(serviceException);
+        
+        // when
+        ValueTask<User> retrieveUserByIdTask = 
+            this.userService.RetrieveUserByIdAsync(someUserId);
+
+        UserServiceException actualUserServiceException =
+            await Assert.ThrowsAsync<UserServiceException>(retrieveUserByIdTask.AsTask);
+
+        // then
+        actualUserServiceException.Should().BeEquivalentTo(expectedUserServiceException);
+        
+        this.storageBrokerMock.Verify(broker => 
+            broker.SelectUserByIdAsync(someUserId),Times.Once);
+        
+        this.loggingBrokerMock.Verify(broker => 
+            broker.LogError(It.Is(SameExceptionAs(expectedUserServiceException))),
+            Times.Once);
+        
+        this.storageBrokerMock.VerifyNoOtherCalls();
+        this.loggingBrokerMock.VerifyNoOtherCalls();
+    }
 }
