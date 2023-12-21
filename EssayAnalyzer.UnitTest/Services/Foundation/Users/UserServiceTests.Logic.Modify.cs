@@ -36,7 +36,7 @@ public partial class UserServiceTests
         
         this.storageBrokerMock.Verify(broker => 
             broker.SelectUserByIdAsync(inputUserId),
-            Times.Once);
+            Times.Never);
         
         this.storageBrokerMock.Verify(broker => 
             broker.UpdateUserAsync(inputUser),

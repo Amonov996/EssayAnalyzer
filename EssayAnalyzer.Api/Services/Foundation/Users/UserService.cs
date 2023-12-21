@@ -40,7 +40,7 @@ public partial class UserService : IUserService
 
     public async ValueTask<User> ModifyUserAsync(User user)
     {
-        throw new NotImplementedException();
+        return await this.storageBroker.UpdateUserAsync(user);
     }
 
     public ValueTask<User> RemoveUserByIdAsync(Guid id) =>
