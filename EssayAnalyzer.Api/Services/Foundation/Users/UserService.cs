@@ -38,10 +38,14 @@ public partial class UserService : IUserService
             return user;
         });
 
-    public async ValueTask<User> ModifyUserAsync(User user)
-    {
-        return await this.storageBroker.UpdateUserAsync(user);
-    }
+    public ValueTask<User> ModifyUserAsync(User user) =>
+        TryCatch(async () =>
+        {
+            ValidateUserIsNotNull(user);
+            
+            return await this.storageBroker
+                .UpdateUserAsync(user);
+        });
 
     public ValueTask<User> RemoveUserByIdAsync(Guid id) =>
         TryCatch(async () =>
