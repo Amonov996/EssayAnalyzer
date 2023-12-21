@@ -1,9 +1,7 @@
-using EssayAnalyzer.Api.Models.Foundation.Users.Exceptions;
 using EssayAnalyzer.Api.Models.Foundation.Results;
 using EssayAnalyzer.Api.Models.Foundation.Results.Exceptions;
 using Xeptions;
 using Microsoft.Data.SqlClient;
-using System;
 
 namespace EssayAnalyzer.Api.Services.Foundation.Results;
 
