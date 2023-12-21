@@ -10,7 +10,7 @@ namespace EssayAnalyzer.UnitTest.Services.Foundation.Users;
 public partial class UserServiceTests
 {
     [Fact]
-    public async Task ShouldThrowCriticalValidationExceptionOnRemoveIfSqlErrorOccursAndLogItAsync()
+    public async Task ShouldThrowCriticalDependencyExceptionOnRemoveIfSqlErrorOccursAndLogItAsync()
     {
         // given
         Guid someUserId = Guid.NewGuid();
