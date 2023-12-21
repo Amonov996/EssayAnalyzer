@@ -25,6 +25,10 @@ public partial class ResultService
         {
             throw CreateAndLogValidationException(invalidResultException);
         }
+        catch (NotFoundResultException notFoundResultException)
+        {
+            throw CreateAndLogValidationException(notFoundResultException);
+        }
         catch (SqlException sqlException)
         {
             var failedResultStorageException =
