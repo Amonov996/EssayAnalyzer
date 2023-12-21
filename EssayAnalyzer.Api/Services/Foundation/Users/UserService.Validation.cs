@@ -18,6 +18,16 @@ public partial class UserService
             (Rule: IsInvalid(user.EmailAddress), Parameter: nameof(User.EmailAddress)));
     }
 
+    private static void ValidateUserOnModify(User user)
+    {
+        ValidateUserIsNotNull(user);
+        
+        Validate((Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
+            (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
+            (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
+            (Rule: IsInvalid(user.EmailAddress), Parameter: nameof(User.EmailAddress)));
+    }
+
     private static void ValidateUserIsNotNull(User user)
     {
         if (user is null)
