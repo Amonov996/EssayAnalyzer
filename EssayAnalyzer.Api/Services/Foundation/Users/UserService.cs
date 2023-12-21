@@ -41,7 +41,12 @@ public partial class UserService : IUserService
     public ValueTask<User> ModifyUserAsync(User user) =>
         TryCatch(async () =>
         {
-            ValidateUserIsNotNull(user);
+            ValidateUserOnModify(user);
+
+            User updatedUser = await this.storageBroker
+                .SelectUserByIdAsync(user.Id);
+            
+            ValidateUserIsExists(updatedUser, user.Id);
             
             return await this.storageBroker
                 .UpdateUserAsync(user);
