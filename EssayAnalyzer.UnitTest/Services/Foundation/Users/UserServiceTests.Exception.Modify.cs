@@ -1,3 +1,4 @@
+using EFxceptions.Models.Exceptions;
 using EssayAnalyzer.Api.Models.Foundation.Users;
 using EssayAnalyzer.Api.Models.Foundation.Users.Exceptions;
 using FluentAssertions;
@@ -49,5 +50,55 @@ public partial class UserServiceTests
         
         this.loggingBrokerMock.VerifyNoOtherCalls();
         this.storageBrokerMock.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public async Task ShouldThrowValidationExceptionOnModifyIfReferenceErrorOccursAndLogItAsync()
+    {
+        // given 
+        User randomUser = CreateRandomUser();
+        User foreignKeyConflictedUser = randomUser;
+        string randomMessage = GetRandomMessage();
+        string exceptionMessage = randomMessage;
+
+        var foreignKeyConstraintConflictException =
+            new ForeignKeyConstraintConflictException(exceptionMessage);
+
+        var invalidUserReferenceException =
+            new InvalidUserRefenerenceException(foreignKeyConstraintConflictException);
+
+        var expectedUserDependencyValidationException =
+            new UserDependencyValidationException(invalidUserReferenceException);
+
+        this.storageBrokerMock.Setup(broker =>
+            broker.SelectUserByIdAsync(foreignKeyConflictedUser.Id))
+            .ReturnsAsync(foreignKeyConflictedUser);
+        
+        this.storageBrokerMock.Setup(broker =>
+            broker.UpdateUserAsync(foreignKeyConflictedUser))
+            .Throws(foreignKeyConstraintConflictException);
+        
+        // when
+        ValueTask<User> modifyUserTask = this.userService.ModifyUserAsync(foreignKeyConflictedUser);
+
+        UserDependencyValidationException actualUserDependencyValidationException =
+            await Assert.ThrowsAsync<UserDependencyValidationException>(modifyUserTask.AsTask);
+
+        // then
+        actualUserDependencyValidationException.Should()
+            .BeEquivalentTo(expectedUserDependencyValidationException);
+        
+        this.storageBrokerMock.Verify(broker =>
+            broker.SelectUserByIdAsync(foreignKeyConflictedUser.Id), Times.Once);
+        
+        this.storageBrokerMock.Verify(broker =>
+            broker.UpdateUserAsync(foreignKeyConflictedUser), Times.Once);
+        
+        this.loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedUserDependencyValidationException))),
+            Times.Once);
+        
+        this.storageBrokerMock.VerifyNoOtherCalls();
+        this.loggingBrokerMock.VerifyNoOtherCalls();
     }
 }
