@@ -29,6 +29,7 @@ public partial class ResultService: IResultService
         TryCatch(async () =>
         {
             ValidateResultId(id);
+
             Result result = await this.storageBroker
                 .SelectResultByIdAsync(id);
 
