@@ -43,12 +43,17 @@ public partial class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public async ValueTask<User> RemoveUserByIdAsync(Guid id)
-    {
-        User removedUser = await this.storageBroker
-            .SelectUserByIdAsync(id);
-
-        return await this.storageBroker
-            .DeleteUserAsync(removedUser);
-    }
+    public ValueTask<User> RemoveUserByIdAsync(Guid id) =>
+        TryCatch(async () =>
+        {
+            ValidateUserId(id);
+            
+            User removedUser = await this.storageBroker
+                .SelectUserByIdAsync(id);
+            
+            ValidateUserIsExists(removedUser, id);
+            
+            return await this.storageBroker
+                .DeleteUserAsync(removedUser);
+        });
 }

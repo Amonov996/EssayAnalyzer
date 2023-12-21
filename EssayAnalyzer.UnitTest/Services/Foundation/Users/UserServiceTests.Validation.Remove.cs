@@ -14,27 +14,27 @@ public partial class UserServiceTests
         // given
         Guid invalidId = Guid.Empty;
         
-        InvalidUserException invalidUserException = 
+        var invalidUserException = 
             new InvalidUserException();
         
         invalidUserException.AddData(
             key: nameof(User.Id),
             values: "Id is required");
 
-        var expectedUserDependencyException = 
-            new UserDependencyException(invalidUserException);
+        var expectedUserValidationException = 
+            new UserValidationException(invalidUserException);
 
         // when
         ValueTask<User> removeUserTask = this.userService.RemoveUserByIdAsync(invalidId);
 
-        UserDependencyException actualUserDependencyException =
-            await Assert.ThrowsAsync<UserDependencyException>(removeUserTask.AsTask);
+        UserValidationException actualUserValidationException =
+            await Assert.ThrowsAsync<UserValidationException>(removeUserTask.AsTask);
 
         // then
-        actualUserDependencyException.Should().BeEquivalentTo(expectedUserDependencyException);
+        actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
         
         this.loggingBrokerMock.Verify(broker => 
-            broker.LogError(It.Is(SameExceptionAs(expectedUserDependencyException))),
+            broker.LogError(It.Is(SameExceptionAs(expectedUserValidationException))),
             Times.Once);
         
         this.storageBrokerMock.Verify(broker => 
