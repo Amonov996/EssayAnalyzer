@@ -1,4 +1,3 @@
-using EssayAnalyzer.Api.Models.Foundation.Users.Exceptions;
 using EssayAnalyzer.Api.Models.Foundation.Results;
 using EssayAnalyzer.Api.Models.Foundation.Results.Exceptions;
 
@@ -21,6 +20,17 @@ public partial class ResultService
         if (result is null)
         {
             throw new NullResultException();
+        }
+    }
+
+    private static void ValidateResultId(Guid id) =>
+        Validate((Rule: IsInvalid(id), Parametr: nameof(Result.Id)));
+
+    private static void ValidateResultIsExists(Result result, Guid id)
+    {
+        if (result is null)
+        {
+            throw new NotFoundResultException(id);
         }
     }
 

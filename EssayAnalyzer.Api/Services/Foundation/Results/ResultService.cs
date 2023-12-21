@@ -25,10 +25,16 @@ public partial class ResultService: IResultService
     public IQueryable<Result> RetrieveAllResults() =>
         TryCatch(() => this.storageBroker.SelectAllResults());
 
-    public ValueTask<Result> RetrieveResultByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
+    public ValueTask<Result> RetrieveResultByIdAsync(Guid id) =>
+        TryCatch(async () =>
+        {
+            ValidateResultId(id);
+            Result result = await this.storageBroker
+                .SelectResultByIdAsync(id);
+
+            ValidateResultIsExists(result, id);
+            return result;
+        });
 
     public ValueTask<Result> RemoveResultByIdAsync(Guid id)
     {
