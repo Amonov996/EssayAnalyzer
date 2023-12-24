@@ -1,4 +1,8 @@
+using EssayAnalyzer.Api.Models.Foundation.Essays;
+using EssayAnalyzer.Api.Models.Foundation.Results;
+using EssayAnalyzer.Api.Models.Orchestration.Analyse;
 using EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
+using EssayAnalyzer.Api.Services.Orchestration.EssayAnalyser;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 
@@ -8,22 +12,25 @@ namespace EssayAnalyzer.Api.Controllers;
 [Route("api[controller]")]
 public class HomeController : RESTFulController
 {
-   private readonly IEssayAnalysisService essayAnalysisService;
+   private readonly IEssayAnalyseFeedbackOrchestrationService analyseFeedbackOrchestrationService;
 
-   public HomeController(IEssayAnalysisService essayAnalysisService)
+   public HomeController(IEssayAnalyseFeedbackOrchestrationService analyseFeedbackOrchestrationService)
    {
-      this.essayAnalysisService = essayAnalysisService;
+       this.analyseFeedbackOrchestrationService = analyseFeedbackOrchestrationService;
    }
 
    [HttpGet]
    public ActionResult<string> GetHomeMessage() => Ok("Hello World!");
 
    [HttpPost]
-   [Consumes("text/plain")]
-   public async ValueTask<ActionResult<string>> Post([FromBody] string essay)
+   public async Task<ActionResult<EssayAnalyse>> Post(Essay essay)
    {
-      var result = await this.essayAnalysisService.AnalyzeEssayAsync(essay);
+       var essayAnalyse = new EssayAnalyse();
+       essayAnalyse.Essay = essay;
 
-      return Ok(result);
+       await analyseFeedbackOrchestrationService
+           .AnalyseEssayFeedback(essayAnalyse);
+       
+       return Ok(essayAnalyse);
    }
 }

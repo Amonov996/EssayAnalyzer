@@ -1,6 +1,9 @@
-﻿namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
+﻿using EssayAnalyzer.Api.Models.Foundation.Essays;
+using EssayAnalyzer.Api.Models.Foundation.Results;
+
+namespace EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
 
 public interface IEssayAnalysisService
 {
-    public ValueTask<string> AnalyzeEssayAsync(string essay);
+    public ValueTask<Result> AnalyzeEssayAsync(Essay essay);
 }
