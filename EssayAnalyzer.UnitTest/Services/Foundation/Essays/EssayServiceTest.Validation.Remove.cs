@@ -46,4 +46,40 @@ public partial class EssayServiceTest
         this.loggingBrokerMock.VerifyNoOtherCalls();
         this.storageBrokerMock.VerifyNoOtherCalls();
     }
+
+    [Fact]
+    public async Task ShouldThrowNotFoundExceptionOnRemoveIfEssayIsNotFoundAndLogItAsync()
+    {
+        // given
+        Guid inputEssayId = Guid.NewGuid();
+        Essay noEssay = null;
+
+        var notFoundEssayException =
+            new NotFoundEssayException(inputEssayId);
+
+        var expectedEssayValidationException =
+            new EssayValidationException(notFoundEssayException);
+
+        // when
+        ValueTask<Essay> removeEssayTask = this.essayService.RemoveEssayByIdAsync(inputEssayId);
+
+        EssayValidationException actualEssayValidationException =
+            await Assert.ThrowsAsync<EssayValidationException>(removeEssayTask.AsTask);
+
+        // then
+        actualEssayValidationException.Should().BeEquivalentTo(expectedEssayValidationException);
+
+        this.loggingBrokerMock.Verify(broker =>
+            broker.LogError(It.Is(SameExceptionAs(expectedEssayValidationException))),
+            Times.Once);
+
+        this.storageBrokerMock.Verify(broker =>
+            broker.SelectEssayByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+        this.storageBrokerMock.Verify(broker =>
+            broker.DeleteEssayAsync(It.IsAny<Essay>()), Times.Never);
+
+        this.loggingBrokerMock.VerifyNoOtherCalls();
+        this.storageBrokerMock.VerifyNoOtherCalls();
+    }
 }
