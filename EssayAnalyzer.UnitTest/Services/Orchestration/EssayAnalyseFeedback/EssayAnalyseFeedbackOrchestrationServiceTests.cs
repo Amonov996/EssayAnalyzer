@@ -33,19 +33,7 @@ public partial class EssayAnalyseFeedbackOrchestrationServiceTests
             resultService: resultServiceMock.Object,
             loggingBroker: loggingBrokerMock.Object);
     }
-
-    private static Essay CreateRandomEssay() =>
-        CreateEssayFiller().Create();
-
-    private static Filler<Essay> CreateEssayFiller() =>
-        new Filler<Essay>();
-
-    private static Result CreateRandomResult() =>
-        CreateResultFiller().Create();
-
-    private static Filler<Result> CreateResultFiller() =>
-        new Filler<Result>();
-
+    
     private static EssayAnalyse CreateRandomEssayAnalyse() =>
         CreateEssayAnalyseFiller().Create();
 
