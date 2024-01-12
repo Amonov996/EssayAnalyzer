@@ -1,6 +1,7 @@
 using EssayAnalyzer.Api.Brokers.Loggings;
 using EssayAnalyzer.Api.Brokers.OpenAis;
 using EssayAnalyzer.Api.Brokers.Storages;
+using EssayAnalyzer.Api.Brokers.Telegram;
 using EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
 using EssayAnalyzer.Api.Services.Foundation.Essays;
 using EssayAnalyzer.Api.Services.Foundation.Results;
@@ -23,9 +24,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<StorageBroker>();
 
 //life cycle
+//Brokers
 builder.Services.AddTransient<IStorageBroker, StorageBroker>();
 builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
 builder.Services.AddTransient<IOpenAiBroker, OpenAiBroker>();
+builder.Services.AddTransient<ITelegramBroker, TelegramBroker>();
+
+//Services
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IEssayService, EssayService>();
 builder.Services.AddTransient<IResultService, ResultService>();
