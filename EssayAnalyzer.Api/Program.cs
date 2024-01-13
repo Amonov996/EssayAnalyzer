@@ -5,6 +5,7 @@ using EssayAnalyzer.Api.Brokers.Telegram;
 using EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
 using EssayAnalyzer.Api.Services.Foundation.Essays;
 using EssayAnalyzer.Api.Services.Foundation.Results;
+using EssayAnalyzer.Api.Services.Foundation.TelegramBot;
 using EssayAnalyzer.Api.Services.Foundation.TextInputFormatter;
 using EssayAnalyzer.Api.Services.Foundation.Users;
 using EssayAnalyzer.Api.Services.Orchestration.EssayAnalyser;
@@ -34,8 +35,14 @@ builder.Services.AddTransient<ITelegramBroker, TelegramBroker>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IEssayService, EssayService>();
 builder.Services.AddTransient<IResultService, ResultService>();
+builder.Services.AddTransient<ITelegramBotService, TelegramBotService>();
 builder.Services.AddTransient<IEssayAnalysisService, EssayAnalysisService>();
 builder.Services.AddTransient<IEssayAnalyseFeedbackOrchestrationService, EssayAnalyserFeedbackOrchestrationService>();
+
+// using Bot
+var provider = builder.Services.BuildServiceProvider();
+var botService = provider.GetRequiredService<ITelegramBotService>();
+botService.StartBotAsync();
 
 var app = builder.Build();
 app.UseSwagger();
