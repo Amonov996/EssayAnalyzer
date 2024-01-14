@@ -35,7 +35,7 @@ builder.Services.AddTransient<ITelegramBroker, TelegramBroker>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IEssayService, EssayService>();
 builder.Services.AddTransient<IResultService, ResultService>();
-builder.Services.AddTransient<ITelegramBotService, TelegramBotService>();
+builder.Services.AddScoped<ITelegramBotService, TelegramBotService>();
 builder.Services.AddTransient<IEssayAnalysisService, EssayAnalysisService>();
 builder.Services.AddTransient<IEssayAnalyseFeedbackOrchestrationService, EssayAnalyserFeedbackOrchestrationService>();
 

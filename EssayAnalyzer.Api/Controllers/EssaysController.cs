@@ -16,7 +16,7 @@ public class EssaysController : RESTFulController
     public EssaysController(IEssayService essayService) =>
         this.essayService = essayService;
     
-    [HttpPost("post/essay")]
+    [HttpPost]
     public async ValueTask<ActionResult<Essay>> PostEssayAsync(Essay essay)
     {
         try
@@ -45,13 +45,12 @@ public class EssaysController : RESTFulController
         }
     }
     
-    [HttpGet("get/all-essay")]
+    [HttpGet]
     public ActionResult<IQueryable<Essay>> GetAllEssays()
     {
         try
         {
-            IQueryable<Essay> essays = this.essayService.RetrieveAllEssays();
-
+            var essays = this.essayService.RetrieveAllEssays();
             return Ok(essays);
         }
         catch (EssayDependencyException essayDependencyException)
@@ -65,14 +64,12 @@ public class EssaysController : RESTFulController
       
     }
 
-    [HttpGet("get/essay-by-id/{guid}")]
+    [HttpGet("get/{guid}")]
     public async ValueTask<ActionResult<Essay>> GetEssayById(Guid id)
     {
         try
         {
             return await this.essayService.RetrieveEssayByIdAsync(id);
-
-            // return Ok(retrievedEssay);
         }
         catch (EssayDependencyException essayDependencyException)
         {

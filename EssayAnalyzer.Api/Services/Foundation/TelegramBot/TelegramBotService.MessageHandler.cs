@@ -10,17 +10,34 @@ public partial class TelegramBotService
         CancellationToken cancellationToken)
     {
         var botClient = this.telegramBroker.TelegramBotClient;
-        var message = update.Message;
+        
+        const int typingIndicatorDelayInMilliseconds = 3000;
+        var incomingTelegramMessage = update.Message;
+        var chatId = incomingTelegramMessage!.Chat.Id;
+        var messageId = incomingTelegramMessage.MessageId;
+        string botResponseMessage;
 
+        await BotChatActionAsync(botClient, chatId, ChatAction.Typing, cancellationToken);
         
-        await botClient.SendChatActionAsync(
-            chatId: message.Chat.Id,
-            chatAction: ChatAction.Typing,
-            cancellationToken: cancellationToken);
-        
-        await botClient.SendTextMessageAsync(
-            chatId: message.Chat.Id,
-            text: message.Text,
-            cancellationToken: cancellationToken);
+        if (ValidateTypeOfMessage(update))
+        {
+            botResponseMessage = NotAllowedMessage.Replace("{USER}", update.Message.Chat.FirstName);
+            var storedMessage = await SendMessageAsync(botClient, chatId, botResponseMessage, cancellationToken);
+            
+            // Deleting disallowed messages
+            await Task.Delay(typingIndicatorDelayInMilliseconds, cancellationToken);
+            await DeleteMessageAsync(botClient, chatId, messageId, cancellationToken);
+            
+            // Deleting stored messages
+            await Task.Delay(typingIndicatorDelayInMilliseconds, cancellationToken);
+            await DeleteMessageAsync(botClient, chatId, storedMessage, cancellationToken);
+        }
+        else
+        {
+            await BotChatActionAsync(botClient, chatId, ChatAction.Typing, cancellationToken);
+            
+            botResponseMessage = TelegramMessageValidate(incomingTelegramMessage.Text, update);
+            await SendMessageAsync(botClient, chatId, botResponseMessage, cancellationToken);
+        }
     }
 }

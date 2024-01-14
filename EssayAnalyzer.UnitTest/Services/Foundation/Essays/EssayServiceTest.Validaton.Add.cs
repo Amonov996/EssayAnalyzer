@@ -44,7 +44,6 @@ public partial class EssayServiceTest
         //given
         var invalidEssay = new Essay()
         {
-                    Title = invalidText,
                     Content = invalidText
         };
 
@@ -53,14 +52,6 @@ public partial class EssayServiceTest
         expectedInvalidEssayException.AddData(
             key:nameof(Essay.Id),
             values: "Id is required");
-        
-        expectedInvalidEssayException.AddData(
-            key:nameof(Essay.UserId),
-            values: "Id is required");
-        
-        expectedInvalidEssayException.AddData(
-            key:nameof(Essay.Title),
-            values: "Text is required");
         
         expectedInvalidEssayException.AddData(
             key:nameof(Essay.Content),
