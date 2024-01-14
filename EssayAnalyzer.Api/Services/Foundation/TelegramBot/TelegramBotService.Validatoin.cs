@@ -14,16 +14,16 @@ public partial class TelegramBotService
         {
             "/start" => WelcomeMessage.Replace("{USER}", update.Message.Chat.FirstName),
             "/help" => HelpMessage,
-            _ => ValidateCountOfTelegramMessage(trimMessage, update)
+            _ => ValidateCountOfTelegramMessage(trimMessage)
         };
     }
 
-    private string ValidateCountOfTelegramMessage(string message, Update update)
+    private string ValidateCountOfTelegramMessage(string message)
     {
-        var countOfWords = message.Split(',', ' ','.', '!', '?','\n').Length;
+        var countOfWords = message.Split(' ').Length;
         var countOfCharacters = message.Length;
 
-        if (countOfWords > 450 || countOfCharacters > 3000)
+        if (countOfWords > 500 || countOfCharacters > 3500)
             return LongEssayMessage;
         
         if (countOfWords < 100 || countOfCharacters < 300)
