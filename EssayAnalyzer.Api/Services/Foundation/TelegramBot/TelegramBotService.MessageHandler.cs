@@ -10,18 +10,53 @@ public partial class TelegramBotService
         CancellationToken cancellationToken)
     {
         var botClient = this.telegramBroker.TelegramBotClient;
-        var message = update.Message;
+        
+        const int typingIndicatorDelayInMilliseconds = 3000;
+        var incomingTelegramMessage = update.Message;
+        var chatId = incomingTelegramMessage.Chat.Id;
+        var messageId = incomingTelegramMessage.MessageId;
+        string botResponseMessage;
         
         await botClient.SendChatActionAsync(
-            chatId: message.Chat.Id,
-            chatAction: ChatAction.Typing,
+            chatId: chatId, 
+            chatAction: ChatAction.ChooseSticker, 
             cancellationToken: cancellationToken);
         
-        var messageToBot = TelegramMessageValidate(message.Text);
-        
-        await botClient.SendTextMessageAsync(
-            chatId: message.Chat.Id,
-            text: messageToBot,
-            cancellationToken: cancellationToken);
+        if (ValidateTypeOfMessage(update))
+        {
+            botResponseMessage = NotAllowedMessage.Replace("{USER}", update.Message.Chat.Username);
+            
+           var storedMessage = await botClient.SendTextMessageAsync(
+               chatId: chatId, 
+               text: botResponseMessage, 
+                cancellationToken: cancellationToken);
+            
+            await Task.Delay(typingIndicatorDelayInMilliseconds, cancellationToken);
+            
+            await botClient.DeleteMessageAsync(
+                chatId:chatId, 
+                messageId: messageId, 
+                cancellationToken: cancellationToken);
+            
+            await Task.Delay(typingIndicatorDelayInMilliseconds, cancellationToken);
+            
+            await botClient.DeleteMessageAsync(
+                chatId:chatId, 
+                messageId: storedMessage.MessageId, 
+                cancellationToken: cancellationToken);
+        }
+        else
+        {
+            await botClient.SendChatActionAsync(
+                chatId: chatId, 
+                chatAction: ChatAction.Typing, 
+                cancellationToken: cancellationToken);
+            
+            botResponseMessage = TelegramMessageValidate(incomingTelegramMessage.Text, update);
+            await botClient.SendTextMessageAsync(
+                chatId: chatId, 
+                text: botResponseMessage, 
+                cancellationToken: cancellationToken);
+        }
     }
 }
