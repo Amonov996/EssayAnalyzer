@@ -1,23 +1,24 @@
-
 using EssayAnalyzer.Api.Models.Foundation.Essays;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 
 namespace EssayAnalyzer.Api.Services.Foundation.TelegramBot;
 
 public partial class TelegramBotService
 {
-    private string TelegramMessageValidate(string message)
+    private string TelegramMessageValidate(string message, Update update)
     {
         var trimMessage = message.Trim();
 
         return trimMessage switch
         {
-            "/start" => WelcomeMessage,
+            "/start" => WelcomeMessage.Replace("{USER}", update.Message.Chat.FirstName),
             "/help" => HelpMessage,
-            _ => ValidateCountOfTelegramMessage(trimMessage)
+            _ => ValidateCountOfTelegramMessage(trimMessage, update)
         };
     }
 
-    private string ValidateCountOfTelegramMessage(string message)
+    private string ValidateCountOfTelegramMessage(string message, Update update)
     {
         var countOfWords = message.Split(',', ' ','.', '!', '?','\n').Length;
         var countOfCharacters = message.Length;
@@ -36,4 +37,8 @@ public partial class TelegramBotService
         
         return result.Result.Feedback;
     }
+
+    private bool ValidateTypeOfMessage(Update message) => 
+        message.Message.Type != MessageType.Text;
+
 }
