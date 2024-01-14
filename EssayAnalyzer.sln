@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EssayAnalyzer.Api", "EssayA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EssayAnalyzer.UnitTest", "EssayAnalyzer.UnitTest\EssayAnalyzer.UnitTest.csproj", "{CE568059-5AA7-40C6-8C0D-23FF531FC6D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EssayAnalyzer.Test", "EssayAnalyzer.Test\EssayAnalyzer.Test.csproj", "{3DC54A0B-3253-432E-B6BF-F66538D129D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{CE568059-5AA7-40C6-8C0D-23FF531FC6D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE568059-5AA7-40C6-8C0D-23FF531FC6D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE568059-5AA7-40C6-8C0D-23FF531FC6D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DC54A0B-3253-432E-B6BF-F66538D129D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DC54A0B-3253-432E-B6BF-F66538D129D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DC54A0B-3253-432E-B6BF-F66538D129D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DC54A0B-3253-432E-B6BF-F66538D129D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
