@@ -11,16 +11,17 @@ public partial class TelegramBotService
     {
         var botClient = this.telegramBroker.TelegramBotClient;
         var message = update.Message;
-
         
         await botClient.SendChatActionAsync(
             chatId: message.Chat.Id,
             chatAction: ChatAction.Typing,
             cancellationToken: cancellationToken);
         
+        var messageToBot = TelegramMessageValidate(message.Text);
+        
         await botClient.SendTextMessageAsync(
             chatId: message.Chat.Id,
-            text: message.Text,
+            text: messageToBot,
             cancellationToken: cancellationToken);
     }
 }
