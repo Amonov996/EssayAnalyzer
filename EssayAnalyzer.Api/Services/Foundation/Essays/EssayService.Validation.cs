@@ -11,8 +11,6 @@ public partial class EssayService
     {
         ValidateEssayNotNull(essay);
         Validate((Rule: IsInvalid(essay.Id), Parameter: nameof(essay.Id)),
-            (Rule: IsInvalid(essay.UserId), Parameter: nameof(essay.UserId)),
-            (Rule: IsInvalid(essay.Title), Parameter: nameof(essay.Title)),
             (Rule: IsInvalid(essay.Content), Parameter: nameof(essay.Content)));
 
     }
