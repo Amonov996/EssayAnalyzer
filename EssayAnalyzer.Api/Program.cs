@@ -6,16 +6,12 @@ using EssayAnalyzer.Api.Services.Foundation.EssayAnalyzes;
 using EssayAnalyzer.Api.Services.Foundation.Essays;
 using EssayAnalyzer.Api.Services.Foundation.Results;
 using EssayAnalyzer.Api.Services.Foundation.TelegramBot;
-using EssayAnalyzer.Api.Services.Foundation.TextInputFormatter;
 using EssayAnalyzer.Api.Services.Foundation.Users;
 using EssayAnalyzer.Api.Services.Orchestration.EssayAnalyser;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers(options =>
-{
-    options.InputFormatters.Add(new TextInputFormatterService());
-});
+builder.Services.AddControllers();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
