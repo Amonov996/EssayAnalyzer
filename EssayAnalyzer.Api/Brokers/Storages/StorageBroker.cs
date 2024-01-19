@@ -21,9 +21,7 @@ public sealed partial class StorageBroker : EFxceptionsContext, IStorageBroker
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        AddEssayConfiguration(modelBuilder);
         AddResultConfiguration(modelBuilder);
-        
         base.OnModelCreating(modelBuilder);
     }
 
