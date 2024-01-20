@@ -14,14 +14,23 @@ public partial class OpenAiBroker : IOpenAiBroker
         this.openAiClient = ConfigureOpenAiClient();
     }
 
-    private IOpenAIClient ConfigureOpenAiClient()
+    private OpenAIClient ConfigureOpenAiClient()
     {
-        var apiKey = configuration.GetValue<string>(key: "OpenAiKey");
-        var openAiConfiguration = new OpenAIConfigurations()
+        try
         {
-            ApiKey = apiKey
-        };
-        
-        return new OpenAIClient(openAiConfiguration);
+            string apiKey = configuration["AppSettings:ApiKey"];
+            Console.WriteLine($"API Key retrieved: {apiKey}");
+
+            var openAIConfiguration = new OpenAIConfigurations
+            {
+                ApiKey = apiKey,
+            };
+            return new OpenAIClient(openAIConfiguration);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error configuring OpenAIClient: {ex.Message}");
+            throw; // Rethrow the exception to indicate a configuration error
+        }
     }
 }
